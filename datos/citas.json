@@ -1,0 +1,74 @@
+[
+    {
+        "id_cita": "CIT001",
+        "fecha": "15/05/2025",
+        "hora": "09:00",
+        "estado": "pendiente",
+        "id_paciente": "PAC001",
+        "id_medico": "MED001"
+    },
+    {
+        "id_cita": "CIT002",
+        "fecha": "16/05/2025",
+        "hora": "11:30",
+        "estado": "pendiente",
+        "id_paciente": "PAC002",
+        "id_medico": "MED002"
+    },
+    {
+        "id_cita": "CIT003",
+        "fecha": "17/05/2025",
+        "hora": "16:15",
+        "estado": "completada",
+        "id_paciente": "PAC003",
+        "id_medico": "MED003"
+    },
+    {
+        "id_cita": "CIT004",
+        "fecha": "18/05/2025",
+        "hora": "10:45",
+        "estado": "pendiente",
+        "id_paciente": "PAC004",
+        "id_medico": "MED004"
+    },
+    {
+        "id_cita": "CIT005",
+        "fecha": "19/05/2025",
+        "hora": "14:00",
+        "estado": "cancelada",
+        "id_paciente": "PAC005",
+        "id_medico": "MED005"
+    },
+    {
+        "id_cita": "CIT006",
+        "fecha": "20/05/2025",
+        "hora": "08:30",
+        "estado": "pendiente",
+        "id_paciente": "PAC006",
+        "id_medico": "MED006"
+    },
+    {
+        "id_cita": "CIT007",
+        "fecha": "21/05/2025",
+        "hora": "13:15",
+        "estado": "pendiente",
+        "id_paciente": "PAC001",
+        "id_medico": "MED002"
+    },
+    {
+        "id_cita": "CIT008",
+        "fecha": "22/05/2025",
+        "hora": "17:30",
+        "estado": "pendiente",
+        "id_paciente": "PAC003",
+        "id_medico": "MED004"
+    },
+    {
+        "id_cita": "CIT0009",
+        "fecha": "07/05/2025",
+        "hora": "10:13",
+        "estado": "pendiente",
+        "id_paciente": "PAC005",
+        "id_medico": "MED006"
+    }
+]

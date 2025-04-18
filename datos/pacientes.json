@@ -1,0 +1,51 @@
+[
+    {
+        "nombre": "Ana",
+        "apellido": "Garc\u00eda",
+        "fecha_nacimiento": "15/03/1985",
+        "telefono": "5512345678",
+        "id_paciente": "PAC001"
+    },
+    {
+        "nombre": "Luis",
+        "apellido": "Mart\u00ednez",
+        "fecha_nacimiento": "22/07/1990",
+        "telefono": "5523456789",
+        "id_paciente": "PAC002"
+    },
+    {
+        "nombre": "Mar\u00eda",
+        "apellido": "Rodr\u00edguez",
+        "fecha_nacimiento": "10/11/1978",
+        "telefono": "5534567890",
+        "id_paciente": "PAC003"
+    },
+    {
+        "nombre": "Carlos",
+        "apellido": "L\u00f3pez",
+        "fecha_nacimiento": "05/05/1995",
+        "telefono": "5545678901",
+        "id_paciente": "PAC004"
+    },
+    {
+        "nombre": "Sof\u00eda",
+        "apellido": "Hern\u00e1ndez",
+        "fecha_nacimiento": "30/09/1982",
+        "telefono": "5556789012",
+        "id_paciente": "PAC005"
+    },
+    {
+        "nombre": "Jorge",
+        "apellido": "P\u00e9rez",
+        "fecha_nacimiento": "18/12/1970",
+        "telefono": "5567890123",
+        "id_paciente": "PAC006"
+    },
+    {
+        "nombre": "Karen",
+        "apellido": "Rodriguez",
+        "fecha_nacimiento": "12/04/2002",
+        "telefono": "23498848929",
+        "id_paciente": "PAC007"
+    }
+]

@@ -1,0 +1,68 @@
+[
+    {
+        "nombre": "Roberto",
+        "apellido": "Sánchez",
+        "fecha_nacimiento": "20/04/1975",
+        "telefono": "5578901234",
+        "id_medico": "MED001",
+        "especialidad": {
+            "nombre": "Cardiología",
+            "descripcion": "Especialidad médica que se encarga del estudio y tratamiento de las enfermedades del corazón"
+        }
+    },
+    {
+        "nombre": "Laura",
+        "apellido": "Ramírez",
+        "fecha_nacimiento": "12/08/1980",
+        "telefono": "5589012345",
+        "id_medico": "MED002",
+        "especialidad": {
+            "nombre": "Pediatría",
+            "descripcion": "Especialidad médica que estudia al niño y sus enfermedades"
+        }
+    },
+    {
+        "nombre": "Fernando",
+        "apellido": "Gómez",
+        "fecha_nacimiento": "03/01/1968",
+        "telefono": "5590123456",
+        "id_medico": "MED003",
+        "especialidad": {
+            "nombre": "Dermatología",
+            "descripcion": "Especialidad médica que se ocupa del estudio de la piel y sus enfermedades"
+        }
+    },
+    {
+        "nombre": "Patricia",
+        "apellido": "Díaz",
+        "fecha_nacimiento": "25/06/1972",
+        "telefono": "5501234567",
+        "id_medico": "MED004",
+        "especialidad": {
+            "nombre": "Ginecología",
+            "descripcion": "Especialidad médica que trata las enfermedades del sistema reproductor femenino"
+        }
+    },
+    {
+        "nombre": "Ricardo",
+        "apellido": "Vázquez",
+        "fecha_nacimiento": "14/10/1983",
+        "telefono": "5512345670",
+        "id_medico": "MED005",
+        "especialidad": {
+            "nombre": "Ortopedia",
+            "descripcion": "Especialidad médica que corrige o previene las deformidades del sistema musculoesquelético"
+        }
+    },
+    {
+        "nombre": "Gabriela",
+        "apellido": "Castillo",
+        "fecha_nacimiento": "07/02/1979",
+        "telefono": "5523456701",
+        "id_medico": "MED006",
+        "especialidad": {
+            "nombre": "Neurología",
+            "descripcion": "Especialidad médica que trata los trastornos del sistema nervioso"
+        }
+    }
+]
