@@ -1,1 +1,0 @@
-from . import cita, diagnostico, especialidad, medico, paciente, persona
