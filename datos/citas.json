@@ -41,7 +41,7 @@
     },
     {
         "id_cita": "CIT006",
-        "fecha": "20/05/2025",
+        "fecha": "29/05/2025",
         "hora": "08:30",
         "estado": "pendiente",
         "id_paciente": "PAC006",
@@ -56,19 +56,35 @@
         "id_medico": "MED002"
     },
     {
-        "id_cita": "CIT008",
-        "fecha": "22/05/2025",
-        "hora": "17:30",
+        "id_cita": "CIT08",
+        "fecha": "30/12/2003",
+        "hora": "14:14",
         "estado": "pendiente",
-        "id_paciente": "PAC003",
-        "id_medico": "MED004"
+        "id_paciente": "PAC007",
+        "id_medico": "MED005"
     },
     {
-        "id_cita": "CIT0009",
-        "fecha": "07/05/2025",
-        "hora": "10:13",
+        "id_cita": "CIT09",
+        "fecha": "30/12/2003",
+        "hora": "14:48",
         "estado": "pendiente",
-        "id_paciente": "PAC005",
-        "id_medico": "MED006"
+        "id_paciente": "PAC007",
+        "id_medico": "MED005"
+    },
+    {
+        "id_cita": "CIT10",
+        "fecha": "30/12/2003",
+        "hora": "18:48",
+        "estado": "pendiente",
+        "id_paciente": "PAC007",
+        "id_medico": "MED005"
+    },
+    {
+        "id_cita": "CIT11",
+        "fecha": "30/12/2003",
+        "hora": "15:45",
+        "estado": "pendiente",
+        "id_paciente": "PAC003",
+        "id_medico": "MED005"
     }
 ]

@@ -229,8 +229,9 @@ class GUI:
             ))
 
     def mostrar_formulario_cita(self):
-        """Muestra el formulario para gestión de citas."""
+        """Muestra el formulario para gestión de citas con opciones de crear, modificar y cancelar."""
         self.limpiar_pantalla()
+        self.cita_seleccionada = None
 
         lbl_titulo = tk.Label(self.root, text="Registro de Citas", font=("Arial", 14))
         lbl_titulo.pack(pady=10)
@@ -240,63 +241,46 @@ class GUI:
 
         # Campos del formulario
         tk.Label(frame_formulario, text="ID Cita:").grid(row=0, column=0, sticky="e", padx=5, pady=5)
-        entry_id = tk.Entry(frame_formulario)
-        entry_id.grid(row=0, column=1, padx=5, pady=5)
+        self.entry_id = tk.Entry(frame_formulario)
+        self.entry_id.grid(row=0, column=1, padx=5, pady=5)
 
         tk.Label(frame_formulario, text="Fecha (DD/MM/AAAA):").grid(row=1, column=0, sticky="e", padx=5, pady=5)
-        entry_fecha = tk.Entry(frame_formulario)
-        entry_fecha.grid(row=1, column=1, padx=5, pady=5)
+        self.entry_fecha = tk.Entry(frame_formulario)
+        self.entry_fecha.grid(row=1, column=1, padx=5, pady=5)
 
         tk.Label(frame_formulario, text="Hora (HH:MM):").grid(row=2, column=0, sticky="e", padx=5, pady=5)
-        entry_hora = tk.Entry(frame_formulario)
-        entry_hora.grid(row=2, column=1, padx=5, pady=5)
+        self.entry_hora = tk.Entry(frame_formulario)
+        self.entry_hora.grid(row=2, column=1, padx=5, pady=5)
 
         # Selección de paciente
         tk.Label(frame_formulario, text="Paciente:").grid(row=3, column=0, sticky="e", padx=5, pady=5)
         pacientes = [f"{p.id_paciente} - {p.get_nombre_completo()}" for p in self.gestor_pacientes.listar_pacientes()]
-        combo_paciente = ttk.Combobox(frame_formulario, values=pacientes)
-        combo_paciente.grid(row=3, column=1, padx=5, pady=5)
+        self.combo_paciente = ttk.Combobox(frame_formulario, values=pacientes, state="readonly")
+        self.combo_paciente.grid(row=3, column=1, padx=5, pady=5)
 
         # Selección de médico
         tk.Label(frame_formulario, text="Médico:").grid(row=4, column=0, sticky="e", padx=5, pady=5)
         medicos = [f"{m.id_medico} - {m.get_nombre_completo()} ({m.especialidad.nombre})"
                    for m in self.gestor_medicos.listar_medicos()]
-        combo_medico = ttk.Combobox(frame_formulario, values=medicos)
-        combo_medico.grid(row=4, column=1, padx=5, pady=5)
+        self.combo_medico = ttk.Combobox(frame_formulario, values=medicos, state="readonly")
+        self.combo_medico.grid(row=4, column=1, padx=5, pady=5)
 
         frame_botones = tk.Frame(self.root)
         frame_botones.pack(pady=10)
 
-        def guardar_cita():
-            """Recolecta los datos del formulario y crea una nueva cita."""
-            try:
-                id_paciente = combo_paciente.get().split(" - ")[0]
-                id_medico = combo_medico.get().split(" - ")[0]
+        self.btn_guardar = tk.Button(frame_botones, text="Guardar", command=self.guardar_cita)
+        self.btn_guardar.grid(row=0, column=0, padx=5)
 
-                paciente = self.gestor_pacientes.buscar_paciente(id_paciente)
-                medico = self.gestor_medicos.buscar_medico(id_medico)
+        self.btn_cancelar_cita = tk.Button(frame_botones, text="Cancelar Cita", state=tk.DISABLED,
+                                           command=self.cancelar_cita)
+        self.btn_cancelar_cita.grid(row=0, column=2, padx=5)
 
-                if not paciente or not medico:
-                    raise ValueError("Paciente o médico no encontrado")
+        self.btn_modificar = tk.Button(frame_botones, text="Modificar Cita", state=tk.DISABLED,
+                                       command=self.modificar_cita)
+        self.btn_modificar.grid(row=0, column=1, padx=5)
 
-                cita = Cita(
-                    entry_id.get(),
-                    entry_fecha.get(),
-                    entry_hora.get(),
-                    paciente,
-                    medico
-                )
-                self.gestor_citas.agendar_cita(cita)
-                messagebox.showinfo("Éxito", "Cita agendada correctamente")
-                self.crear_menu_principal()
-            except Exception as e:
-                messagebox.showerror("Error", f"No se pudo agendar la cita: {e}")
-
-        btn_guardar = tk.Button(frame_botones, text="Guardar", command=guardar_cita)
-        btn_guardar.grid(row=0, column=0, padx=5)
-
-        btn_cancelar = tk.Button(frame_botones, text="Cancelar", command=self.crear_menu_principal)
-        btn_cancelar.grid(row=0, column=1, padx=5)
+        btn_regresar = tk.Button(frame_botones, text="Regresar", command=self.crear_menu_principal)
+        btn_regresar.grid(row=0, column=3, padx=5)
 
         # Lista de citas
         frame_lista = tk.Frame(self.root)
@@ -305,18 +289,31 @@ class GUI:
         lbl_lista = tk.Label(frame_lista, text="Citas Registradas")
         lbl_lista.pack()
 
-        tree = ttk.Treeview(frame_lista, columns=("ID", "Fecha", "Hora", "Paciente", "Médico", "Estado"),
-                            show="headings")
-        tree.heading("ID", text="ID")
-        tree.heading("Fecha", text="Fecha")
-        tree.heading("Hora", text="Hora")
-        tree.heading("Paciente", text="Paciente")
-        tree.heading("Médico", text="Médico")
-        tree.heading("Estado", text="Estado")
-        tree.pack(fill="both", expand=True)
+        self.tree = ttk.Treeview(frame_lista, columns=("ID", "Fecha", "Hora", "Paciente", "Médico", "Estado"),
+                                 show="headings", selectmode="browse")
+        self.tree.heading("ID", text="ID")
+        self.tree.heading("Fecha", text="Fecha")
+        self.tree.heading("Hora", text="Hora")
+        self.tree.heading("Paciente", text="Paciente")
+        self.tree.heading("Médico", text="Médico")
+        self.tree.heading("Estado", text="Estado")
+        self.tree.pack(fill="both", expand=True)
 
-        for cita in self.gestor_citas._citas:
-            tree.insert("", "end", values=(
+        # Llenar el treeview con las citas existentes
+        self.actualizar_lista_citas()
+
+        # Configurar evento de selección
+        self.tree.bind("<<TreeviewSelect>>", self.on_cita_seleccionada)
+
+    def actualizar_lista_citas(self):
+        """Actualiza la tabla leyendo directamente del gestor"""
+        # Limpiar tabla
+        for item in self.tree.get_children():
+            self.tree.delete(item)
+
+        # Repoblar tabla
+        for cita in self.gestor_citas.listar_citas():
+            self.tree.insert("", "end", values=(
                 cita.id_cita,
                 cita.fecha,
                 cita.hora,
@@ -324,6 +321,110 @@ class GUI:
                 cita.medico.get_nombre_completo(),
                 cita.estado
             ))
+
+    def on_cita_seleccionada(self, event):
+        """Maneja la selección de una cita en el Treeview."""
+        seleccion = self.tree.selection()
+        if seleccion:
+            item = self.tree.item(seleccion[0])
+            id_cita = item['values'][0]
+            self.cita_seleccionada = self.gestor_citas.buscar_cita(id_cita)
+
+            # Habilitar botones de modificar/cancelar
+            self.btn_cancelar_cita.config(state=tk.NORMAL)
+            self.btn_modificar.config(state=tk.NORMAL)
+
+            # Cargar datos en el formulario
+            self.entry_id.delete(0, tk.END)
+            self.entry_id.insert(0, self.cita_seleccionada.id_cita)
+            self.entry_fecha.delete(0, tk.END)
+            self.entry_fecha.insert(0, self.cita_seleccionada.fecha)
+            self.entry_hora.delete(0, tk.END)
+            self.entry_hora.insert(0, self.cita_seleccionada.hora)
+
+            # Seleccionar paciente/médico en los combobox
+            self.combo_paciente.set(
+                f"{self.cita_seleccionada.paciente.id_paciente} - {self.cita_seleccionada.paciente.get_nombre_completo()}")
+            self.combo_medico.set(
+                f"{self.cita_seleccionada.medico.id_medico} - {self.cita_seleccionada.medico.get_nombre_completo()}")
+
+    def guardar_cita(self):
+        """Crea una nueva cita con los datos del formulario."""
+        try:
+            id_paciente = self.combo_paciente.get().split(" - ")[0]
+            id_medico = self.combo_medico.get().split(" - ")[0]
+
+            paciente = self.gestor_pacientes.buscar_paciente(id_paciente)
+            medico = self.gestor_medicos.buscar_medico(id_medico)
+
+            if not paciente or not medico:
+                raise ValueError("Paciente o médico no encontrado")
+
+            cita = Cita(
+                self.entry_id.get(),
+                self.entry_fecha.get(),
+                self.entry_hora.get(),
+                paciente,
+                medico
+            )
+            self.gestor_citas.agendar_cita(cita)
+            messagebox.showinfo("Éxito", "Cita agendada correctamente")
+            self.actualizar_lista_citas()
+        except Exception as e:
+            messagebox.showerror("Error", f"No se pudo agendar la cita: {e}")
+
+    def cancelar_cita(self):
+        """Cancela la cita seleccionada."""
+        if not self.cita_seleccionada:
+            return
+
+        confirmacion = messagebox.askyesno(
+            "Confirmar",
+            f"¿Cancelar la cita {self.cita_seleccionada.id_cita}?"
+        )
+
+        if not confirmacion:
+            return
+
+        if self.gestor_citas.cancelar_cita(self.cita_seleccionada.id_cita):
+            self.actualizar_lista_citas()
+            self.limpiar_formulario()
+            messagebox.showinfo("Éxito", "Cita cancelada correctamente")
+        else:
+            messagebox.showerror("Error", "La cita no pudo ser cancelada")
+
+    def modificar_cita(self):
+        """Modifica la cita seleccionada con los nuevos datos del formulario."""
+        if self.cita_seleccionada:
+            try:
+                nueva_fecha = self.entry_fecha.get()
+                nueva_hora = self.entry_hora.get()
+
+                if not nueva_fecha or not nueva_hora:
+                    raise ValueError("Fecha y hora son obligatorios")
+
+                if self.gestor_citas.reagendar_cita(
+                        self.cita_seleccionada.id_cita,
+                        nueva_fecha,
+                        nueva_hora
+                ):
+                    messagebox.showinfo("Éxito", "Cita modificada correctamente")
+                    self.actualizar_lista_citas()
+                else:
+                    messagebox.showerror("Error", "No se pudo modificar la cita")
+            except Exception as e:
+                messagebox.showerror("Error", f"Error al modificar: {str(e)}")
+
+    def limpiar_formulario(self):
+        """Limpia todos los campos del formulario."""
+        self.entry_id.delete(0, tk.END)
+        self.entry_fecha.delete(0, tk.END)
+        self.entry_hora.delete(0, tk.END)
+        self.combo_paciente.set('')
+        self.combo_medico.set('')
+        self.cita_seleccionada = None
+        self.btn_cancelar_cita.config(state=tk.DISABLED)
+        self.btn_modificar.config(state=tk.DISABLED)
 
     def mostrar_reportes(self):
         """Muestra los reportes y estadísticas del sistema."""

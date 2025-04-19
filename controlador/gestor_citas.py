@@ -12,6 +12,7 @@ class GestorCitas:
 
     def __init__(self):
         """Inicializa el gestor de citas y carga datos desde archivo JSON."""
+        self.file_path = Path("datos") / 'citas.json'
         self._citas = []
         self.cargar_datos()
 
@@ -24,16 +25,30 @@ class GestorCitas:
         self._citas.append(cita)
         self.guardar_datos()
 
-    def cancelar_cita(self, id_cita: str):
-        """Cancela una cita existente.
+    def cancelar_cita(self, id_cita: str) -> bool:
+        """Elimina una cita tanto del archivo como de la lista en memoria
 
         Args:
             id_cita: ID de la cita a cancelar.
         """
-        cita = self.buscar_cita(id_cita)
-        if cita:
-            cita.cancelar()
-            self.guardar_datos()
+        # Eliminar de memoria
+        initial_count = len(self._citas)
+        self._citas = [c for c in self._citas if c.id_cita != id_cita]
+
+        if len(self._citas) < initial_count:
+            # Leer archivo actual
+            with open(self.file_path, 'r', encoding='utf-8') as file:
+                citas_json = json.load(file)
+
+            # Filtrar la cita
+            citas_actualizadas = [c for c in citas_json if c['id_cita'] != id_cita]
+
+            # Escribir cambios
+            with open(self.file_path, 'w', encoding='utf-8') as file:
+                json.dump(citas_actualizadas, file, indent=4, ensure_ascii=False)
+
+            return True
+        return False
 
     def reagendar_cita(self, id_cita: str, nueva_fecha: str, nueva_hora: str):
         """Reagenda una cita existente.
@@ -47,6 +62,8 @@ class GestorCitas:
         if cita:
             cita.reagendar(nueva_fecha, nueva_hora)
             self.guardar_datos()
+            return True
+        return  False
 
     def citas_por_paciente(self, id_paciente: str) -> list:
         """Obtiene las citas de un paciente específico.
@@ -87,9 +104,8 @@ class GestorCitas:
     def cargar_datos(self):
         """Carga los datos de citas desde un archivo JSON."""
         try:
-            ruta = Path("datos") / "citas.json"
-            if ruta.exists():
-                with open(ruta, 'r', encoding='utf-8') as archivo:
+            if self.file_path.exists():
+                with open(self.file_path, 'r', encoding='utf-8') as archivo:
                     datos = json.load(archivo)
                     # Necesitamos los gestores de pacientes y médicos para reconstruir las citas
                     from controlador.gestor_pacientes import GestorPacientes
@@ -112,13 +128,12 @@ class GestorCitas:
                             )
                             cita._estado = cita_data['estado']
                             self._citas.append(cita)
-        except Exception as e:
+        except json.JSONDecodeError as e:
             print(f"Error al cargar citas: {e}")
 
     def guardar_datos(self):
         """Guarda los datos de citas en un archivo JSON."""
         try:
-            ruta = Path("datos") / "citas.json"
             datos = []
             for cita in self._citas:
                 datos.append({
@@ -130,7 +145,7 @@ class GestorCitas:
                     'id_medico': cita.medico.id_medico
                 })
 
-            with open(ruta, 'w', encoding='utf-8') as archivo:
+            with open(self.file_path, 'w', encoding='utf-8') as archivo:
                 json.dump(datos, archivo, indent=4)
         except Exception as e:
             print(f"Error al guardar citas: {e}")
