@@ -2,6 +2,7 @@ import json
 from modelo.medico import Medico
 from modelo.especialidad import Especialidad
 from pathlib import Path
+from utils.validaciones import validar_telefono, validar_nombre, validar_fecha, generar_id
 
 
 class GestorMedicos:
@@ -16,14 +17,28 @@ class GestorMedicos:
         self._medicos = []
         self.cargar_datos()
 
-    def agregar_medico(self, medico: Medico):
+    def agregar_medico(self, medico_data: dict) -> bool:
         """Agrega un nuevo médico al sistema.
 
         Args:
             medico: Objeto Medico a agregar.
         """
+        if not all([
+            validar_nombre(medico_data['nombre']),
+            validar_nombre(medico_data['apellido']),
+            validar_fecha(medico_data['fecha_nacimiento']),
+            validar_telefono(medico_data['telefono'])
+        ]):
+            return False
+
+            # Generar ID automático
+        ultimo_id = max([m.id_medico for m in self._medicos], default=None)
+        medico_data['id_medico'] = generar_id("MED", ultimo_id)
+
+        medico = Medico(**medico_data)
         self._medicos.append(medico)
         self.guardar_datos()
+        return True
 
     def buscar_medico(self, id_medico: str) -> Medico:
         """Busca un médico por su ID.

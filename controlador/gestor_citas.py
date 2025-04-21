@@ -1,7 +1,8 @@
 import json
+import re
 from modelo.cita import Cita
 from pathlib import Path
-
+from utils.validaciones import validar_fecha, generar_id
 
 class GestorCitas:
     """Clase que gestiona las operaciones relacionadas con citas médicas.
@@ -16,14 +17,27 @@ class GestorCitas:
         self._citas = []
         self.cargar_datos()
 
-    def agendar_cita(self, cita: Cita):
+    def agendar_cita(self, fecha: str, hora: str, paciente, medico) -> bool:
         """Agrega una nueva cita al sistema.
 
         Args:
             cita: Objeto Cita a agregar.
         """
+        """Valida y agrega cita con ID automático"""
+        if not validar_fecha(fecha):
+            return False
+
+        if not re.match(r'^\d{2}:\d{2}$', hora):
+            return False
+
+        # Generar ID automático
+        ultimo_id = max([c.id_cita for c in self._citas], default=None)
+        id_cita = generar_id("CIT", ultimo_id)
+
+        cita = Cita(fecha=fecha, hora=hora, paciente=paciente, medico=medico, id_cita=id_cita)
         self._citas.append(cita)
         self.guardar_datos()
+        return True
 
     def cancelar_cita(self, id_cita: str) -> bool:
         """Elimina una cita tanto del archivo como de la lista en memoria

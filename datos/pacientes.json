@@ -47,5 +47,26 @@
         "fecha_nacimiento": "12/04/2002",
         "telefono": "23498848929",
         "id_paciente": "PAC007"
+    },
+    {
+        "nombre": "sdfsfd",
+        "apellido": "dfsf",
+        "fecha_nacimiento": "12/12/12",
+        "telefono": "1231231232",
+        "id_paciente": "123qwd"
+    },
+    {
+        "nombre": "asdfqwd",
+        "apellido": "sadfqwe",
+        "fecha_nacimiento": "17/10/2025",
+        "telefono": "4234234234",
+        "id_paciente": "PAC008"
+    },
+    {
+        "nombre": "David",
+        "apellido": "Lara",
+        "fecha_nacimiento": "08/08/2027",
+        "telefono": "1231231231",
+        "id_paciente": "PAC009"
     }
 ]

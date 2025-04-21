@@ -1,0 +1,26 @@
+[
+    {
+        "nombre": "Cardiología",
+        "descripcion": "Especialidad médica del corazón y sistema cardiovascular"
+    },
+    {
+        "nombre": "Pediatría",
+        "descripcion": "Especialidad médica para niños"
+    },
+    {
+        "nombre": "Dermatología",
+        "descripcion": "Especialidad médica de la piel"
+    },
+    {
+        "nombre": "Neurología",
+        "descripcion": "Especialidad médica que trata los trastornos del sistema nervioso"
+    },
+    {
+        "nombre": "Ortopedia",
+        "descripcion": "Especialidad médica que corrige o previene las deformidades del sistema musculoesquelético"
+    },
+    {
+        "nombre": "Ginecología",
+        "descripcion": "Especialidad médica que trata las enfermedades del sistema reproductor femenino"
+    }
+]

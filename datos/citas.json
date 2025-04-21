@@ -73,18 +73,10 @@
     },
     {
         "id_cita": "CIT10",
-        "fecha": "30/12/2003",
-        "hora": "18:48",
+        "fecha": "30/12/2029",
+        "hora": "10:10",
         "estado": "pendiente",
         "id_paciente": "PAC007",
-        "id_medico": "MED005"
-    },
-    {
-        "id_cita": "CIT11",
-        "fecha": "30/12/2003",
-        "hora": "15:45",
-        "estado": "pendiente",
-        "id_paciente": "PAC003",
         "id_medico": "MED005"
     }
 ]

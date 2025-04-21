@@ -1,6 +1,7 @@
 import json
 from modelo.paciente import Paciente
 from pathlib import Path
+from utils.validaciones import validar_nombre,validar_telefono,validar_fecha, generar_id
 
 
 class GestorPacientes:
@@ -15,14 +16,28 @@ class GestorPacientes:
         self._pacientes = []
         self.cargar_datos()
 
-    def agregar_paciente(self, paciente: Paciente):
+    def agregar_paciente(self, paciente_data: dict)  -> bool:
         """Agrega un nuevo paciente al sistema.
 
         Args:
             paciente: Objeto Paciente a agregar.
         """
+        if not all([
+            validar_nombre(paciente_data['nombre']),
+            validar_nombre(paciente_data['apellido']),
+            validar_fecha(paciente_data['fecha_nacimiento']),
+            validar_telefono(paciente_data['telefono'])
+        ]):
+            return False
+
+        # Generar ID automático
+        ultimo_id = max([p.id_paciente for p in self._pacientes], default=None)
+        paciente_data['id_paciente'] = generar_id("PAC", ultimo_id)
+
+        paciente = Paciente(**paciente_data)
         self._pacientes.append(paciente)
         self.guardar_datos()
+        return True
 
     def buscar_paciente(self, id_paciente: str) -> Paciente:
         """Busca un paciente por su ID.

@@ -4,11 +4,7 @@ from controlador.gestor_pacientes import GestorPacientes
 from controlador.gestor_medicos import GestorMedicos
 from controlador.gestor_citas import GestorCitas
 from controlador.gestor_estadisticas import GestorEstadisticas
-from modelo.paciente import Paciente
-from modelo.medico import Medico
-from modelo.especialidad import Especialidad
-from modelo.cita import Cita
-
+from controlador.gestor_especialidades import GestorEspecialidades
 
 class GUI:
     """Clase que representa la interfaz gráfica del sistema de gestión clínica."""
@@ -19,11 +15,11 @@ class GUI:
         self.gestor_medicos = GestorMedicos()
         self.gestor_citas = GestorCitas()
         self.gestor_estadisticas = GestorEstadisticas()
+        self.gestor_especialidades = GestorEspecialidades()
 
         self.root = tk.Tk()
         self.root.title("Sistema de Gestión Clínica")
         self.root.geometry("800x600")
-
         self.crear_menu_principal()
 
     def crear_menu_principal(self):
@@ -51,6 +47,10 @@ class GUI:
         btn_reportes = tk.Button(frame_botones, text="Reportes y Estadísticas",
                                  command=self.mostrar_reportes)
         btn_reportes.grid(row=1, column=1, padx=10, pady=10)
+
+        btn_especialidades = tk.Button(frame_botones, text="Gestión de Especialidades",
+                                       command=self.mostrar_formulario_especialidades)
+        btn_especialidades.grid(row=2, column=0, padx=10, pady=10)
 
     def limpiar_pantalla(self):
         """Limpia todos los widgets de la pantalla."""
@@ -85,34 +85,34 @@ class GUI:
         entry_telefono = tk.Entry(frame_formulario)
         entry_telefono.grid(row=3, column=1, padx=5, pady=5)
 
-        tk.Label(frame_formulario, text="ID Paciente:").grid(row=4, column=0, sticky="e", padx=5, pady=5)
-        entry_id = tk.Entry(frame_formulario)
-        entry_id.grid(row=4, column=1, padx=5, pady=5)
-
         frame_botones = tk.Frame(self.root)
         frame_botones.pack(pady=10)
 
         def guardar_paciente():
             """Recolecta los datos del formulario y crea un nuevo paciente."""
             try:
-                paciente = Paciente(
-                    entry_nombre.get(),
-                    entry_apellido.get(),
-                    entry_fecha_nac.get(),
-                    entry_telefono.get(),
-                    entry_id.get()
-                )
-                self.gestor_pacientes.agregar_paciente(paciente)
-                messagebox.showinfo("Éxito", "Paciente registrado correctamente")
-                self.crear_menu_principal()
+                paciente = {
+                    'nombre': entry_nombre.get(),
+                    'apellido': entry_apellido.get(),
+                    'fecha_nacimiento': entry_fecha_nac.get(),
+                    'telefono': entry_telefono.get()
+                }
+                if not self.gestor_pacientes.agregar_paciente(paciente):
+                    messagebox.showerror("Error", "Datos inválidos. Verifique:"
+                                                  "\n- Nombres/apellidos solo letras"
+                                                  "\n- Fecha posterior a hoy (DD/MM/AAAA)"
+                                                  "\n- Teléfono 10 dígitos")
+                else:
+                    messagebox.showinfo("Éxito", "Paciente registrado")
+                    self.crear_menu_principal()
             except Exception as e:
                 messagebox.showerror("Error", f"No se pudo registrar el paciente: {e}")
 
         btn_guardar = tk.Button(frame_botones, text="Guardar", command=guardar_paciente)
         btn_guardar.grid(row=0, column=0, padx=5)
 
-        btn_cancelar = tk.Button(frame_botones, text="Cancelar", command=self.crear_menu_principal)
-        btn_cancelar.grid(row=0, column=1, padx=5)
+        btn_regresar = tk.Button(frame_botones, text="Regresar", command=self.crear_menu_principal)
+        btn_regresar.grid(row=0, column=1, padx=5)
 
         # Lista de pacientes
         frame_lista = tk.Frame(self.root)
@@ -164,17 +164,10 @@ class GUI:
         entry_telefono = tk.Entry(frame_formulario)
         entry_telefono.grid(row=3, column=1, padx=5, pady=5)
 
-        tk.Label(frame_formulario, text="ID Médico:").grid(row=4, column=0, sticky="e", padx=5, pady=5)
-        entry_id = tk.Entry(frame_formulario)
-        entry_id.grid(row=4, column=1, padx=5, pady=5)
-
         tk.Label(frame_formulario, text="Especialidad:").grid(row=5, column=0, sticky="e", padx=5, pady=5)
-        entry_especialidad = tk.Entry(frame_formulario)
-        entry_especialidad.grid(row=5, column=1, padx=5, pady=5)
-
-        tk.Label(frame_formulario, text="Descripción Especialidad:").grid(row=6, column=0, sticky="e", padx=5, pady=5)
-        entry_desc_especialidad = tk.Entry(frame_formulario)
-        entry_desc_especialidad.grid(row=6, column=1, padx=5, pady=5)
+        especialidades = [e.nombre for e in self.gestor_especialidades.listar_especialidades()]
+        combo_especialidad = ttk.Combobox(frame_formulario, values=especialidades, state="readonly")
+        combo_especialidad.grid(row=5, column=1, padx=5, pady=5)
 
         frame_botones = tk.Frame(self.root)
         frame_botones.pack(pady=10)
@@ -182,29 +175,35 @@ class GUI:
         def guardar_medico():
             """Recolecta los datos del formulario y crea un nuevo médico."""
             try:
-                especialidad = Especialidad(
-                    entry_especialidad.get(),
-                    entry_desc_especialidad.get()
-                )
-                medico = Medico(
-                    entry_nombre.get(),
-                    entry_apellido.get(),
-                    entry_fecha_nac.get(),
-                    entry_telefono.get(),
-                    entry_id.get(),
-                    especialidad
-                )
-                self.gestor_medicos.agregar_medico(medico)
-                messagebox.showinfo("Éxito", "Médico registrado correctamente")
-                self.crear_menu_principal()
+                nombre_esp = combo_especialidad.get()
+                if not nombre_esp:
+                    messagebox.showerror("Error", "Seleccione una especialidad válida")
+                    return
+                medico = {
+                    'nombre': entry_nombre.get(),
+                    'apellido': entry_apellido.get(),
+                    'fecha_nacimiento': entry_fecha_nac.get(),
+                    'telefono': entry_telefono.get(),
+                    'especialidad': combo_especialidad.get()
+                }
+
+                if not self.gestor_medicos.agregar_medico(medico):
+                    messagebox.showerror("Error", "Datos inválidos. Verifique:"
+                                                  "\n- Nombres/apellidos solo letras"
+                                                  "\n- Fecha posterior a hoy (DD/MM/AAAA)"
+                                                  "\n- Teléfono 10 dígitos"
+                                                  "\n- Especialidad seleccionada")
+                else:
+                    messagebox.showinfo("Éxito", "Médico registrado")
+                    self.crear_menu_principal()
             except Exception as e:
                 messagebox.showerror("Error", f"No se pudo registrar el médico: {e}")
 
         btn_guardar = tk.Button(frame_botones, text="Guardar", command=guardar_medico)
         btn_guardar.grid(row=0, column=0, padx=5)
 
-        btn_cancelar = tk.Button(frame_botones, text="Cancelar", command=self.crear_menu_principal)
-        btn_cancelar.grid(row=0, column=1, padx=5)
+        btn_regresar = tk.Button(frame_botones, text="Regresar", command=self.crear_menu_principal)
+        btn_regresar.grid(row=0, column=1, padx=5)
 
         # Lista de médicos
         frame_lista = tk.Frame(self.root)
@@ -232,18 +231,17 @@ class GUI:
         """Muestra el formulario para gestión de citas con opciones de crear, modificar y cancelar."""
         self.limpiar_pantalla()
         self.cita_seleccionada = None
+        self.filtro_paciente = None
+        self.filtro_medico = None
 
         lbl_titulo = tk.Label(self.root, text="Registro de Citas", font=("Arial", 14))
         lbl_titulo.pack(pady=10)
 
+        # Frame para formulario
         frame_formulario = tk.Frame(self.root)
         frame_formulario.pack(pady=10)
 
         # Campos del formulario
-        tk.Label(frame_formulario, text="ID Cita:").grid(row=0, column=0, sticky="e", padx=5, pady=5)
-        self.entry_id = tk.Entry(frame_formulario)
-        self.entry_id.grid(row=0, column=1, padx=5, pady=5)
-
         tk.Label(frame_formulario, text="Fecha (DD/MM/AAAA):").grid(row=1, column=0, sticky="e", padx=5, pady=5)
         self.entry_fecha = tk.Entry(frame_formulario)
         self.entry_fecha.grid(row=1, column=1, padx=5, pady=5)
@@ -282,7 +280,45 @@ class GUI:
         btn_regresar = tk.Button(frame_botones, text="Regresar", command=self.crear_menu_principal)
         btn_regresar.grid(row=0, column=3, padx=5)
 
-        # Lista de citas
+        # Frame para filtros
+        frame_filtros = tk.Frame(self.root)
+        frame_filtros.pack(pady=10, fill=tk.X)
+
+        # Filtro por paciente
+        tk.Label(frame_filtros, text="Filtrar por paciente:").grid(row=0, column=0, padx=5)
+        opciones_pacientes = ["Todos"] + [f"{p.id_paciente} - {p.get_nombre_completo()}"
+                                          for p in self.gestor_pacientes.listar_pacientes()]
+        self.combo_filtro_paciente = ttk.Combobox(
+            frame_filtros,
+            values=opciones_pacientes,
+            state="readonly"
+        )
+        self.combo_filtro_paciente.grid(row=0, column=1, padx=5)
+        self.combo_filtro_paciente.set("Todos")
+        self.combo_filtro_paciente.bind("<<ComboboxSelected>>", self.aplicar_filtros)
+
+        # Filtro por médico
+        tk.Label(frame_filtros, text="Filtrar por médico:").grid(row=0, column=2, padx=5)
+        opciones_medicos = ["Todos"] + [f"{m.id_medico} - {m.get_nombre_completo()}"
+                                        for m in self.gestor_medicos.listar_medicos()]
+        self.combo_filtro_medico = ttk.Combobox(
+            frame_filtros,
+            values=opciones_medicos,
+            state="readonly"
+        )
+        self.combo_filtro_medico.grid(row=0, column=3, padx=5)
+        self.combo_filtro_medico.set("Todos")
+        self.combo_filtro_medico.bind("<<ComboboxSelected>>", self.aplicar_filtros)
+
+        # Asegurarse que los combobox de filtros están habilitados inicialmente
+        self.combo_filtro_paciente.config(state="readonly")
+        self.combo_filtro_medico.config(state="readonly")
+
+        # Botón para limpiar filtros
+        btn_limpiar = tk.Button(frame_filtros, text="Limpiar filtros", command=self.limpiar_filtros)
+        btn_limpiar.grid(row=0, column=4, padx=5)
+
+        # Frame para la lista de citas
         frame_lista = tk.Frame(self.root)
         frame_lista.pack(pady=10, fill="both", expand=True)
 
@@ -306,13 +342,28 @@ class GUI:
         self.tree.bind("<<TreeviewSelect>>", self.on_cita_seleccionada)
 
     def actualizar_lista_citas(self):
-        """Actualiza la tabla leyendo directamente del gestor"""
+        """Actualiza la tabla aplicando los filtros actuales."""
         # Limpiar tabla
         for item in self.tree.get_children():
             self.tree.delete(item)
 
-        # Repoblar tabla
+        # Obtener filtros
+        filtro_paciente = self.combo_filtro_paciente.get().split(" - ")[
+            0] if self.combo_filtro_paciente.get() != "Todos" else None
+        filtro_medico = self.combo_filtro_medico.get().split(" - ")[
+            0] if self.combo_filtro_medico.get() != "Todos" else None
+
+        # Aplicar filtros
+        citas_filtradas = []
         for cita in self.gestor_citas.listar_citas():
+            cumple_paciente = (filtro_paciente is None) or (cita.paciente.id_paciente == filtro_paciente)
+            cumple_medico = (filtro_medico is None) or (cita.medico.id_medico == filtro_medico)
+
+            if cumple_paciente and cumple_medico:
+                citas_filtradas.append(cita)
+
+        # Llenar tabla con citas filtradas
+        for cita in citas_filtradas:
             self.tree.insert("", "end", values=(
                 cita.id_cita,
                 cita.fecha,
@@ -335,8 +386,6 @@ class GUI:
             self.btn_modificar.config(state=tk.NORMAL)
 
             # Cargar datos en el formulario
-            self.entry_id.delete(0, tk.END)
-            self.entry_id.insert(0, self.cita_seleccionada.id_cita)
             self.entry_fecha.delete(0, tk.END)
             self.entry_fecha.insert(0, self.cita_seleccionada.fecha)
             self.entry_hora.delete(0, tk.END)
@@ -347,6 +396,11 @@ class GUI:
                 f"{self.cita_seleccionada.paciente.id_paciente} - {self.cita_seleccionada.paciente.get_nombre_completo()}")
             self.combo_medico.set(
                 f"{self.cita_seleccionada.medico.id_medico} - {self.cita_seleccionada.medico.get_nombre_completo()}")
+
+            # Deshabilitar selección de pacientes y médicos
+            self.combo_medico.config(state=tk.DISABLED)
+            self.combo_paciente.config(state=tk.DISABLED)
+
 
     def guardar_cita(self):
         """Crea una nueva cita con los datos del formulario."""
@@ -360,16 +414,16 @@ class GUI:
             if not paciente or not medico:
                 raise ValueError("Paciente o médico no encontrado")
 
-            cita = Cita(
-                self.entry_id.get(),
-                self.entry_fecha.get(),
-                self.entry_hora.get(),
-                paciente,
-                medico
-            )
-            self.gestor_citas.agendar_cita(cita)
-            messagebox.showinfo("Éxito", "Cita agendada correctamente")
-            self.actualizar_lista_citas()
+            fecha = self.entry_fecha.get()
+            hora = self.entry_hora.get()
+
+            if not self.gestor_citas.agendar_cita(fecha,hora, paciente, medico):
+                messagebox.showerror("Error", "Datos inválidos. Verifique:"
+                                              "\n- Fecha posterior a hoy (DD/MM/AAAA)"
+                                              "\n- Hora en formato HH:MM")
+            else:
+                messagebox.showinfo("Éxito", "Cita agendada")
+                self.actualizar_lista_citas()
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo agendar la cita: {e}")
 
@@ -417,7 +471,6 @@ class GUI:
 
     def limpiar_formulario(self):
         """Limpia todos los campos del formulario."""
-        self.entry_id.delete(0, tk.END)
         self.entry_fecha.delete(0, tk.END)
         self.entry_hora.delete(0, tk.END)
         self.combo_paciente.set('')
@@ -477,6 +530,119 @@ class GUI:
         # Botón de regreso
         btn_regresar = tk.Button(self.root, text="Regresar", command=self.crear_menu_principal)
         btn_regresar.pack(pady=10)
+
+    def aplicar_filtros(self, event=None):
+        """Aplica los filtros seleccionados a la lista de citas."""
+        # Determinar qué combobox disparó el evento
+        widget_disparador = event.widget if event else None
+
+        # Si se modificó el filtro de paciente
+        if widget_disparador == self.combo_filtro_paciente:
+            # Deshabilitar el filtro de médico si se seleccionó un paciente específico
+            if self.combo_filtro_paciente.get() != "Todos":
+                self.combo_filtro_medico.set("Todos")
+                self.combo_filtro_medico.config(state=tk.DISABLED)
+            else:
+                self.combo_filtro_medico.config(state="readonly")
+
+        # Si se modificó el filtro de médico
+        elif widget_disparador == self.combo_filtro_medico:
+            # Deshabilitar el filtro de paciente si se seleccionó un médico específico
+            if self.combo_filtro_medico.get() != "Todos":
+                self.combo_filtro_paciente.set("Todos")
+                self.combo_filtro_paciente.config(state=tk.DISABLED)
+            else:
+                self.combo_filtro_paciente.config(state="readonly")
+
+        # Actualizar lista con filtros
+        self.actualizar_lista_citas()
+
+    def limpiar_filtros(self):
+        """Restablece todos los filtros a sus valores por defecto y habilita los combobox."""
+        self.combo_filtro_paciente.set("Todos")
+        self.combo_filtro_medico.set("Todos")
+        # Habilitar ambos combobox
+        self.combo_filtro_paciente.config(state="readonly")
+        self.combo_filtro_medico.config(state="readonly")
+        self.actualizar_lista_citas()
+
+    def mostrar_formulario_especialidades(self):
+        """Muestra el formulario para gestión de especialidades."""
+        self.limpiar_pantalla()
+
+        lbl_titulo = tk.Label(self.root, text="Gestión de Especialidades", font=("Arial", 14))
+        lbl_titulo.pack(pady=10)
+
+        frame_formulario = tk.Frame(self.root)
+        frame_formulario.pack(pady=10)
+
+        # Campos del formulario
+        tk.Label(frame_formulario, text="Nombre:").grid(row=0, column=0, sticky="e", padx=5, pady=5)
+        entry_nombre = tk.Entry(frame_formulario)
+        entry_nombre.grid(row=0, column=1, padx=5, pady=5)
+
+        tk.Label(frame_formulario, text="Descripción:").grid(row=1, column=0, sticky="e", padx=5, pady=5)
+        entry_desc = tk.Entry(frame_formulario)
+        entry_desc.grid(row=1, column=1, padx=5, pady=5)
+
+        frame_botones = tk.Frame(self.root)
+        frame_botones.pack(pady=10)
+
+        def guardar_especialidad():
+            """Guarda una nueva especialidad."""
+            nombre = entry_nombre.get()
+            desc = entry_desc.get()
+            if nombre and desc:
+                if self.gestor_especialidades.agregar_especialidad(nombre, desc):
+                    messagebox.showinfo("Éxito", "Especialidad agregada")
+                    actualizar_lista()
+                    entry_nombre.delete(0, tk.END)
+                    entry_desc.delete(0, tk.END)
+                else:
+                    messagebox.showerror("Error", "La especialidad ya existe")
+            else:
+                messagebox.showerror("Error", "Complete todos los campos")
+
+        btn_guardar = tk.Button(frame_botones, text="Guardar", command=guardar_especialidad)
+        btn_guardar.grid(row=0, column=0, padx=5)
+
+        def eliminar_seleccionada():
+            """Elimina la especialidad seleccionada."""
+            seleccion = tree.selection()
+            if seleccion:
+                item = tree.item(seleccion[0])
+                nombre = item['values'][0]
+                if self.gestor_especialidades.eliminar_especialidad(nombre):
+                    messagebox.showinfo("Éxito", "Especialidad eliminada")
+                    actualizar_lista()
+                else:
+                    messagebox.showerror("Error", "No se pudo eliminar")
+
+        btn_eliminar = tk.Button(frame_botones, text="Eliminar", command=eliminar_seleccionada)
+        btn_eliminar.grid(row=0, column=1, padx=5)
+
+        btn_regresar = tk.Button(frame_botones, text="Regresar", command=self.crear_menu_principal)
+        btn_regresar.grid(row=0, column=2, padx=5)
+
+        # Lista de especialidades
+        frame_lista = tk.Frame(self.root)
+        frame_lista.pack(pady=10, fill="both", expand=True)
+
+        lbl_lista = tk.Label(frame_lista, text="Especialidades Registradas")
+        lbl_lista.pack()
+
+        tree = ttk.Treeview(frame_lista, columns=("Nombre", "Descripción"), show="headings")
+        tree.heading("Nombre", text="Nombre")
+        tree.heading("Descripción", text="Descripción")
+        tree.pack(fill="both", expand=True)
+
+        def actualizar_lista():
+            """Actualiza la lista de especialidades."""
+            tree.delete(*tree.get_children())
+            for esp in self.gestor_especialidades.listar_especialidades():
+                tree.insert("", "end", values=(esp.nombre, esp.descripcion))
+
+        actualizar_lista()
 
     def ejecutar(self):
         """Inicia la aplicación."""
