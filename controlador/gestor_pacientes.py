@@ -1,7 +1,7 @@
 import json
 from modelo.paciente import Paciente
 from pathlib import Path
-from utils.validaciones import validar_nombre,validar_telefono,validar_fecha, generar_id
+from utils.validaciones import validar_nombre,validar_telefono,validar_fecha_paciente, generar_id, validar_persona_duplicado
 
 
 class GestorPacientes:
@@ -22,13 +22,19 @@ class GestorPacientes:
         Args:
             paciente: Objeto Paciente a agregar.
         """
+        # Validar formatos correctos
         if not all([
             validar_nombre(paciente_data['nombre']),
             validar_nombre(paciente_data['apellido']),
-            validar_fecha(paciente_data['fecha_nacimiento']),
+            validar_fecha_paciente(paciente_data['fecha_nacimiento']),
             validar_telefono(paciente_data['telefono'])
         ]):
             return False
+
+        # Validar que no haya un paciente con la misma información
+        if validar_persona_duplicado('datos/pacientes.json', paciente_data):
+            raise ValueError(
+                "Error: Ya existe un paciente idéntico (mismo nombre, apellido, fecha nacimiento y teléfono)")
 
         # Generar ID automático
         ultimo_id = max([p.id_paciente for p in self._pacientes], default=None)

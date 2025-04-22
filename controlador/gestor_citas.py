@@ -2,7 +2,7 @@ import json
 import re
 from modelo.cita import Cita
 from pathlib import Path
-from utils.validaciones import validar_fecha, generar_id
+from utils.validaciones import validar_fecha_citas, generar_id, validar_hora
 
 class GestorCitas:
     """Clase que gestiona las operaciones relacionadas con citas médicas.
@@ -23,11 +23,12 @@ class GestorCitas:
         Args:
             cita: Objeto Cita a agregar.
         """
-        """Valida y agrega cita con ID automático"""
-        if not validar_fecha(fecha):
+        # Validar formato y rango de la nueva fecha
+        if not validar_fecha_citas(fecha):
             return False
 
-        if not re.match(r'^\d{2}:\d{2}$', hora):
+        # Validar formato de la nueva hora
+        if not validar_hora(hora):
             return False
 
         # Generar ID automático
@@ -40,29 +41,36 @@ class GestorCitas:
         return True
 
     def cancelar_cita(self, id_cita: str) -> bool:
-        """Elimina una cita tanto del archivo como de la lista en memoria
+        """Marca una cita como cancelada tanto en memoria como en el archivo JSON
 
-        Args:
-            id_cita: ID de la cita a cancelar.
-        """
-        # Eliminar de memoria
-        initial_count = len(self._citas)
-        self._citas = [c for c in self._citas if c.id_cita != id_cita]
+           Args:
+               id_cita: ID de la cita a cancelar.
 
-        if len(self._citas) < initial_count:
-            # Leer archivo actual
-            with open(self.file_path, 'r', encoding='utf-8') as file:
-                citas_json = json.load(file)
+           Returns:
+               bool: True si la cita fue encontrada y cancelada, False en caso contrario
+           """
+        cita_encontrada = False
 
-            # Filtrar la cita
-            citas_actualizadas = [c for c in citas_json if c['id_cita'] != id_cita]
+        # Actualizar en memoria
+        for cita in self._citas:
+            if cita.id_cita == id_cita and cita.estado == "pendiente":
+                cita.cancelar()
+                cita_encontrada = True
+                break
 
-            # Escribir cambios
-            with open(self.file_path, 'w', encoding='utf-8') as file:
-                json.dump(citas_actualizadas, file, indent=4, ensure_ascii=False)
+        if cita_encontrada:
+            try:
+                self.guardar_datos()
+            except Exception as e:
+                print(f"Error al guardar los cambios: {e}")
+                # Revertir el cambio en memoria si falla el guardado
+                for cita in self._citas:
+                    if cita.id_cita == id_cita:
+                        cita._estado = "pendiente"  # Accedemos al atributo protegido directamente para revertir
+                        break
+                return False
 
-            return True
-        return False
+        return cita_encontrada
 
     def reagendar_cita(self, id_cita: str, nueva_fecha: str, nueva_hora: str):
         """Reagenda una cita existente.
@@ -73,7 +81,20 @@ class GestorCitas:
             nueva_hora: Nueva hora para la cita.
         """
         cita = self.buscar_cita(id_cita)
-        if cita:
+
+        # Verificar que la nueva fecha/hora sean diferentes a las actuales
+        if cita.fecha == nueva_fecha and cita.hora == nueva_hora:
+            return False
+
+        # Validar formato y rango de la nueva fecha
+        if not validar_fecha_citas(nueva_fecha):
+            return False
+
+        # Validar formato de la nueva hora
+        if not validar_hora(nueva_hora):
+            return False
+
+        if cita and cita.estado == "pendiente":
             cita.reagendar(nueva_fecha, nueva_hora)
             self.guardar_datos()
             return True

@@ -100,7 +100,7 @@ class GUI:
                 if not self.gestor_pacientes.agregar_paciente(paciente):
                     messagebox.showerror("Error", "Datos inválidos. Verifique:"
                                                   "\n- Nombres/apellidos solo letras"
-                                                  "\n- Fecha posterior a hoy (DD/MM/AAAA)"
+                                                  "\n- Fecha previa a hoy (DD/MM/AAAA)"
                                                   "\n- Teléfono 10 dígitos")
                 else:
                     messagebox.showinfo("Éxito", "Paciente registrado")
@@ -190,7 +190,7 @@ class GUI:
                 if not self.gestor_medicos.agregar_medico(medico):
                     messagebox.showerror("Error", "Datos inválidos. Verifique:"
                                                   "\n- Nombres/apellidos solo letras"
-                                                  "\n- Fecha posterior a hoy (DD/MM/AAAA)"
+                                                  "\n- Fecha previa a hoy (DD/MM/AAAA)"
                                                   "\n- Teléfono 10 dígitos"
                                                   "\n- Especialidad seleccionada")
                 else:
@@ -505,19 +505,34 @@ class GUI:
             tree_especialidad.insert("", "end", values=(especialidad, consultas))
 
         # Médico más solicitado
-        lbl_medico = tk.Label(frame_reportes, text="Médico Más Solicitado", font=("Arial", 12))
+        lbl_medico = tk.Label(frame_reportes, text="Médico más Solicitado", font=("Arial", 12))
         lbl_medico.pack(pady=(10, 0))
 
-        medico_solicitado = self.gestor_estadisticas.medico_mas_solicitado(
+        medico_solicitado, num_citas_medico = self.gestor_estadisticas.medico_mas_solicitado(
             self.gestor_medicos, self.gestor_citas
         )
-        if medico_solicitado:
-            lbl_info = tk.Label(frame_reportes,
-                                text=f"{medico_solicitado.get_nombre_completo()} - {medico_solicitado.especialidad.nombre}")
-            lbl_info.pack()
+        if medico_solicitado :
+            lbl_info_medico = tk.Label(frame_reportes,
+                                       text=f"{medico_solicitado.get_nombre_completo()} ({num_citas_medico} citas) - {medico_solicitado.especialidad.nombre}")
+            lbl_info_medico.pack()
         else:
-            lbl_info = tk.Label(frame_reportes, text="No hay datos suficientes")
-            lbl_info.pack()
+            lbl_info_medico = tk.Label(frame_reportes, text="No hay datos suficientes de médicos")
+            lbl_info_medico.pack()
+
+        # Paciente con más citas
+        lbl_paciente_mas_citas = tk.Label(frame_reportes, text="Paciente frecuente", font=("Arial", 12))
+        lbl_paciente_mas_citas.pack(pady=(10, 0))
+
+        paciente_mas_citas, num_citas_paciente = self.gestor_estadisticas.paciente_con_mas_citas(
+            self.gestor_pacientes, self.gestor_citas
+        )
+        if paciente_mas_citas:
+            lbl_info_paciente = tk.Label(frame_reportes,
+                                         text=f"{paciente_mas_citas.get_nombre_completo()} ({num_citas_paciente} citas)")
+            lbl_info_paciente.pack()
+        else:
+            lbl_info_paciente = tk.Label(frame_reportes, text="No hay datos suficientes de pacientes")
+            lbl_info_paciente.pack()
 
         # Promedio de atención mensual
         lbl_promedio = tk.Label(frame_reportes, text="Promedio de Atención Mensual", font=("Arial", 12))

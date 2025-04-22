@@ -33,17 +33,33 @@ class GestorEstadisticas:
         Returns:
             Medico: El médico con más citas.
         """
-        conteo_medicos = defaultdict(int)
-
+        medicos_citas = {}
         for cita in gestor_citas.listar_citas():
-            id_medico = cita.medico.id_medico
-            conteo_medicos[id_medico] += 1
+            medico_id = cita.medico.id_medico
+            medicos_citas[medico_id] = medicos_citas.get(medico_id, 0) + 1
 
-        if not conteo_medicos:
-            return None
+        if not medicos_citas:
+            return None, 0
 
-        id_mas_solicitado = max(conteo_medicos, key=conteo_medicos.get)
-        return gestor_medicos.buscar_medico(id_mas_solicitado)
+        medico_mas_solicitado_id = max(medicos_citas, key=medicos_citas.get)
+        medico = gestor_medicos.buscar_medico(medico_mas_solicitado_id)
+        num_citas = medicos_citas[medico_mas_solicitado_id]
+        return medico, num_citas
+
+    def paciente_con_mas_citas(self, gestor_pacientes, gestor_citas):
+        """Devuelve el paciente con más citas y el número de citas que tiene."""
+        pacientes_citas = {}
+        for cita in gestor_citas.listar_citas():
+            paciente_id = cita.paciente.id_paciente
+            pacientes_citas[paciente_id] = pacientes_citas.get(paciente_id, 0) + 1
+
+        if not pacientes_citas:
+            return None, 0
+
+        paciente_mas_citas_id = max(pacientes_citas, key=pacientes_citas.get)
+        paciente = gestor_pacientes.buscar_paciente(paciente_mas_citas_id)
+        num_citas = pacientes_citas[paciente_mas_citas_id]
+        return paciente, num_citas
 
     def promedio_atencion_mensual(self, gestor_citas) -> float:
         """Calcula el promedio de citas atendidas por mes.
@@ -57,7 +73,7 @@ class GestorEstadisticas:
         citas_por_mes = defaultdict(int)
 
         for cita in gestor_citas.listar_citas():
-            if cita.estado == "completada":
+            if cita.estado == "completada" or "pendiente":
                 fecha = datetime.strptime(cita.fecha, "%d/%m/%Y")
                 mes_anio = f"{fecha.month}/{fecha.year}"
                 citas_por_mes[mes_anio] += 1

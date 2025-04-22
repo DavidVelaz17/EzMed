@@ -2,7 +2,7 @@ import json
 from modelo.medico import Medico
 from modelo.especialidad import Especialidad
 from pathlib import Path
-from utils.validaciones import validar_telefono, validar_nombre, validar_fecha, generar_id
+from utils.validaciones import validar_telefono, validar_nombre, validar_fecha_medico, generar_id, validar_persona_duplicado
 
 
 class GestorMedicos:
@@ -23,15 +23,21 @@ class GestorMedicos:
         Args:
             medico: Objeto Medico a agregar.
         """
+        # Validar formatos correctos
         if not all([
             validar_nombre(medico_data['nombre']),
             validar_nombre(medico_data['apellido']),
-            validar_fecha(medico_data['fecha_nacimiento']),
+            validar_fecha_medico(medico_data['fecha_nacimiento']),
             validar_telefono(medico_data['telefono'])
         ]):
             return False
 
-            # Generar ID automático
+        # Validar que no haya un paciente con la misma información
+        if validar_persona_duplicado('datos/medicos.json', medico_data):
+            raise ValueError(
+                "Error: Ya existe un médico idéntico (mismo nombre, apellido, fecha nacimiento y teléfono)")
+
+        # Generar ID automático
         ultimo_id = max([m.id_medico for m in self._medicos], default=None)
         medico_data['id_medico'] = generar_id("MED", ultimo_id)
 
