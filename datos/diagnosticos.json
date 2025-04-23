@@ -1,0 +1,16 @@
+[
+    {
+        "id_diagnostico": "DIA001",
+        "descripcion": "asdfasdf",
+        "tratamiento": "asdfdasf",
+        "observaciones": "asdfwerq",
+        "id_cita": "CIT011"
+    },
+    {
+        "id_diagnostico": "DIA002",
+        "descripcion": "asdfasdf",
+        "tratamiento": "asdfqwrq23dsf",
+        "observaciones": "asdfqwefxcv",
+        "id_cita": "CIT011"
+    }
+]

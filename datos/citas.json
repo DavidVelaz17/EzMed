@@ -83,7 +83,7 @@
         "id_cita": "CIT011",
         "fecha": "10/01/2026",
         "hora": "10:53",
-        "estado": "pendiente",
+        "estado": "completada",
         "id_paciente": "PAC002",
         "id_medico": "MED001"
     },
@@ -94,5 +94,21 @@
         "estado": "pendiente",
         "id_paciente": "PAC002",
         "id_medico": "MED002"
+    },
+    {
+        "id_cita": "CIT011",
+        "fecha": "18/05/2025",
+        "hora": "17:19",
+        "estado": "pendiente",
+        "id_paciente": "PAC002",
+        "id_medico": "MED004"
+    },
+    {
+        "id_cita": "CIT011",
+        "fecha": "17/05/2025",
+        "hora": "10:10",
+        "estado": "pendiente",
+        "id_paciente": "PAC002",
+        "id_medico": "MED005"
     }
 ]

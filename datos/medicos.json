@@ -75,16 +75,5 @@
             "nombre": "Pediatr\u00eda",
             "descripcion": "Especialidad m\u00e9dica para ni\u00f1os"
         }
-    },
-    {
-        "nombre": "asd",
-        "apellido": "asd",
-        "fecha_nacimiento": "12/12/1221",
-        "telefono": "1231231232",
-        "id_medico": "wfwfwef",
-        "especialidad": {
-            "nombre": "Dermatolog\u00eda",
-            "descripcion": "Especialidad m\u00e9dica de la piel"
-        }
     }
 ]

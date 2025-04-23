@@ -1,5 +1,4 @@
 import json
-import re
 from modelo.cita import Cita
 from pathlib import Path
 from utils.validaciones import validar_fecha_citas, generar_id, validar_hora
