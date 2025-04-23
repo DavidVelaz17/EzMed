@@ -66,11 +66,11 @@
         }
     },
     {
-        "nombre": "ASDF",
-        "apellido": "ASDFGLKJ",
-        "fecha_nacimiento": "14/07/2000",
-        "telefono": "12312312332",
-        "id_medico": "LKSJD12",
+        "nombre": "Kenia",
+        "apellido": "Kalihua",
+        "fecha_nacimiento": "19/11/1999",
+        "telefono": "1231231233",
+        "id_medico": "MED007",
         "especialidad": {
             "nombre": "Pediatr\u00eda",
             "descripcion": "Especialidad m\u00e9dica para ni\u00f1os"

@@ -54,6 +54,26 @@ class GestorDiagnosticos:
             print(f"Error al registrar diagnóstico: {e}")
             return False
 
+    def obtener_diagnosticos_completos(self) -> list:
+        """Obtiene todos los diagnósticos con información completa.
+
+        Returns:
+            list: Lista de diccionarios con toda la información de cada diagnóstico
+        """
+        diagnosticos_completos = []
+        for diagnostico in self._diagnosticos:
+            cita = diagnostico.cita
+            diagnosticos_completos.append({
+                'id_diagnostico': diagnostico.id_diagnostico,
+                'id_cita': cita.id_cita,
+                'paciente': cita.paciente.get_nombre_completo(),
+                'medico': cita.medico.get_nombre_completo(),
+                'descripcion': diagnostico.descripcion,
+                'tratamiento': diagnostico.tratamiento,
+                'observaciones': diagnostico.observaciones
+            })
+        return diagnosticos_completos
+
     def obtener_diagnosticos_por_medico(self, id_medico: str) -> list:
         """Obtiene los diagnósticos realizados por un médico específico.
 

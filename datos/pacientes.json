@@ -49,13 +49,6 @@
         "id_paciente": "PAC007"
     },
     {
-        "nombre": "sdfsfd",
-        "apellido": "dfsf",
-        "fecha_nacimiento": "12/12/12",
-        "telefono": "1231231232",
-        "id_paciente": "123qwd"
-    },
-    {
         "nombre": "asdfqwd",
         "apellido": "sadfqwe",
         "fecha_nacimiento": "17/10/2025",
@@ -110,5 +103,12 @@
         "fecha_nacimiento": "15/03/1985",
         "telefono": "5512345679",
         "id_paciente": "PAC015"
+    },
+    {
+        "nombre": "Omar",
+        "apellido": "Zaragoza",
+        "fecha_nacimiento": "19/08/1980",
+        "telefono": "1231231233",
+        "id_paciente": "PAC016"
     }
 ]
