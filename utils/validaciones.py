@@ -4,7 +4,8 @@ from typing import Dict, Any
 from datetime import datetime, timedelta
 
 def validar_fecha_citas(fecha: str) -> bool:
-    """Valida que la fecha:
+    """
+    Valida que la fecha:
      - Tenga formato DD/MM/AAAA
      - Sea posterior al día actual
      - No sea mayor a 1 año a partir de la fecha actual
@@ -30,7 +31,8 @@ def validar_fecha_citas(fecha: str) -> bool:
         return False  # Formato inválido
 
 def validar_fecha_paciente(fecha: str) -> bool:
-    """Valida que la fecha de nacimiento del paciente::
+    """
+    Valida que la fecha de nacimiento del paciente::
         - Tenga formato DD/MM/AAAA
         - Sea previa o igual al día actual
         - No sea mayor a 200 años en el pasado
@@ -40,7 +42,7 @@ def validar_fecha_paciente(fecha: str) -> bool:
 
         Returns:
             bool: True si la fecha es válida, False si no cumple los requisitos
-        """
+    """
     try:
         fecha_ingresada = datetime.strptime(fecha, "%d/%m/%Y").date()
         hoy = datetime.now().date()
@@ -54,9 +56,10 @@ def validar_fecha_paciente(fecha: str) -> bool:
         return False  # Formato inválido o fecha imposible (ej: 29/02 en año no bisiesto)
 
 def validar_fecha_medico(fecha: str) -> bool:
-    """Valida que la fecha de nacimiento del médico:
+    """
+    Valida que la fecha de nacimiento del médico:
          - Tenga formato DD/MM/AAAA
-         - Indique una edad entre 25 y 70 años (inclusive)
+         - Indique una edad entre 25 y 70 años
          - Sea una fecha válida y real
 
          Args:
@@ -79,14 +82,39 @@ def validar_fecha_medico(fecha: str) -> bool:
         return False  # Formato inválido o fecha imposible
 
 def validar_telefono(telefono: str) -> bool:
-    """Valida formato de teléfono: 10 dígitos, puede empezar con +"""
+    """
+    Valida que el número de teléfono tenga 10 dígitos y pueda comenzar con '+' opcionalmente.
+
+      Args:
+          telefono (str): Número de teléfono a validar.
+
+      Returns:
+          bool: True si el formato es válido, False en caso contrario.
+    """
     return re.match(r'^(\+?\d{10})$', telefono) is not None
 
 def validar_nombre(nombre: str) -> bool:
-    """Valida que solo contenga letras y espacios"""
+    """
+    Valida que el nombre contenga solo letras y espacios, con al menos 2 caracteres.
+
+        Args:
+            nombre (str): Nombre a validar.
+
+        Returns:
+            bool: True si el nombre es válido, False en caso contrario.
+    """
     return re.match(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}$', nombre) is not None
 
 def validar_hora(hora: str) -> bool:
+    """
+    Valida que la hora esté en formato HH:MM y que los valores estén en un rango válido.
+
+       Args:
+           hora (str): Hora en formato HH:MM (24 horas).
+
+       Returns:
+           bool: True si la hora es válida, False en caso contrario.
+    """
     if not re.match(r'^\d{2}:\d{2}$', hora):
         return False
 
@@ -98,19 +126,19 @@ def validar_hora(hora: str) -> bool:
     return True
 
 def validar_persona_duplicado(file_path: str, nueva_persona: Dict) -> bool:
-    """Verifica si ya existe un paciente idéntico en todos los campos clave.
+    """
+    Verifica si ya existe una persona con los mismos datos en el archivo JSON.
 
-    Args:
-        file_path: Ruta al archivo JSON de pacientes
-        nuevo_paciente: Datos del paciente a validar {
-            'nombre': str,
-            'apellido': str,
-            'fecha_nacimiento': str (DD/MM/AAAA),
-            'telefono': str
-        }
+        Args:
+            file_path (str): Ruta al archivo JSON que contiene la lista de personas.
+            nueva_persona (Dict): Diccionario con los datos de la nueva persona. Debe incluir las claves:
+                - 'nombre' (str)
+                - 'apellido' (str)
+                - 'fecha_nacimiento' (str en formato DD/MM/AAAA)
+                - 'telefono' (str)
 
-    Returns:
-        bool: True si existe un duplicado exacto, False si es único
+        Returns:
+            bool: True si se encuentra un duplicado exacto, False si es único.
     """
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -128,7 +156,16 @@ def validar_persona_duplicado(file_path: str, nueva_persona: Dict) -> bool:
     return False
 
 def generar_id(prefijo: str, ultimo_id: str) -> str:
-    """Genera un ID autoincremental con prefijo"""
+    """
+    Genera un nuevo ID autoincremental basado en el último ID registrado y un prefijo.
+
+        Args:
+            prefijo (str): Prefijo del ID (por ejemplo, 'MED', 'PAC').
+            ultimo_id (str): Último ID generado (por ejemplo, 'MED012').
+
+        Returns:
+            str: Nuevo ID autoincrementado (por ejemplo, 'MED013').
+    """
     if not ultimo_id:
         return f"{prefijo}001"
 

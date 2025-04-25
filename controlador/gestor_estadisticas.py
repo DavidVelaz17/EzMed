@@ -3,17 +3,26 @@ from collections import defaultdict
 
 
 class GestorEstadisticas:
-    """Clase que gestiona las operaciones estadísticas del sistema."""
+    """
+    Clase que gestiona las operaciones estadísticas del sistema.
+
+    Esta clase provee métodos para obtener estadísticas como:
+    - Consultas por especialidad
+    - Médico más solicitado
+    - Paciente con más citas
+    - Promedio de atención mensual
+    """
 
     def calcular_consultas_por_especialidad(self, gestor_medicos, gestor_citas) -> dict:
-        """Calcula el número de consultas por especialidad médica.
+        """
+        Calcula el número de consultas realizadas por cada especialidad médica.
 
-        Args:
-            gestor_medicos: Instancia de GestorMedicos.
-            gestor_citas: Instancia de GestorCitas.
+            Args:
+                gestor_medicos: Instancia del gestor de médicos.
+                gestor_citas: Instancia del gestor de citas.
 
-        Returns:
-            dict: Diccionario con especialidades como keys y número de consultas como values.
+            Returns:
+                dict: Diccionario donde las claves son nombres de especialidades y los valores son el número de consultas.
         """
         estadisticas = defaultdict(int)
 
@@ -24,14 +33,16 @@ class GestorEstadisticas:
         return dict(estadisticas)
 
     def medico_mas_solicitado(self, gestor_medicos, gestor_citas):
-        """Identifica al médico con más citas asignadas.
+        """
+        Identifica al médico con mayor cantidad de citas asignadas.
 
-        Args:
-            gestor_medicos: Instancia de GestorMedicos.
-            gestor_citas: Instancia de GestorCitas.
+            Args:
+                gestor_medicos: Instancia del gestor de médicos.
+                gestor_citas: Instancia del gestor de citas.
 
-        Returns:
-            Medico: El médico con más citas.
+            Returns:
+                tuple: Una tupla con el objeto Medico más solicitado y el número de citas asignadas.
+                       Si no hay datos, devuelve (None, 0).
         """
         medicos_citas = {}
         for cita in gestor_citas.listar_citas():
@@ -47,7 +58,17 @@ class GestorEstadisticas:
         return medico, num_citas
 
     def paciente_con_mas_citas(self, gestor_pacientes, gestor_citas):
-        """Devuelve el paciente con más citas y el número de citas que tiene."""
+        """
+        Devuelve el paciente con más citas registradas.
+
+            Args:
+                gestor_pacientes: Instancia del gestor de pacientes.
+                gestor_citas: Instancia del gestor de citas.
+
+            Returns:
+                tuple: Una tupla con el objeto Paciente que tiene más citas y el número de citas.
+                       Si no hay datos, devuelve (None, 0).
+        """
         pacientes_citas = {}
         for cita in gestor_citas.listar_citas():
             paciente_id = cita.paciente.id_paciente
@@ -62,13 +83,14 @@ class GestorEstadisticas:
         return paciente, num_citas
 
     def promedio_atencion_mensual(self, gestor_citas) -> float:
-        """Calcula el promedio de citas atendidas por mes.
+        """
+        Calcula el promedio de citas completadas o pendientes por mes.
 
-        Args:
-            gestor_citas: Instancia de GestorCitas.
+            Args:
+                gestor_citas: Instancia del gestor de citas.
 
-        Returns:
-            float: Promedio de citas por mes.
+            Returns:
+                float: Promedio de citas por mes. Devuelve 0.0 si no hay datos.
         """
         citas_por_mes = defaultdict(int)
 

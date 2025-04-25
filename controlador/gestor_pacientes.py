@@ -5,22 +5,37 @@ from utils.validaciones import validar_nombre,validar_telefono,validar_fecha_pac
 
 
 class GestorPacientes:
-    """Clase que gestiona las operaciones relacionadas con pacientes.
+    """
+    Clase que gestiona las operaciones relacionadas con pacientes.
 
-    Attributes:
-        pacientes (list): Lista de pacientes registrados en el sistema.
+    Esta clase permite agregar, buscar, listar pacientes, así como cargar y guardar datos desde/hacia archivos JSON.
+
+        Attributes:
+            _pacientes (list): Lista de objetos Paciente registrados.
     """
 
     def __init__(self):
-        """Inicializa el gestor de pacientes y carga datos desde archivo JSON."""
+        """
+        Inicializa el gestor de pacientes y carga los datos desde el archivo JSON.
+
+        Crea una lista vacía y la rellena con pacientes cargados desde el archivo `pacientes.json` si existe.
+        """
         self._pacientes = []
         self.cargar_datos()
 
     def agregar_paciente(self, paciente_data: dict)  -> bool:
-        """Agrega un nuevo paciente al sistema.
+        """
+        Agrega un nuevo paciente al sistema luego de validar sus datos.
 
-        Args:
-            paciente: Objeto Paciente a agregar.
+            Args:
+                paciente_data (dict): Diccionario con los datos del paciente, incluyendo nombre, apellido,
+                                      fecha de nacimiento y teléfono.
+
+            Returns:
+                bool: True si el paciente fue agregado correctamente, False si falló la validación.
+
+            Raises:
+                ValueError: Si ya existe un paciente con los mismos datos (nombre, apellido, fecha y teléfono).
         """
         # Validar formatos correctos
         if not all([
@@ -46,13 +61,14 @@ class GestorPacientes:
         return True
 
     def buscar_paciente(self, id_paciente: str) -> Paciente:
-        """Busca un paciente por su ID.
+        """
+        Busca un paciente por su ID único.
 
-        Args:
-            id_paciente: ID del paciente a buscar.
+            Args:
+                id_paciente (str): ID del paciente a buscar.
 
-        Returns:
-            Paciente: Objeto Paciente si se encuentra, None en caso contrario.
+            Returns:
+                Paciente: Objeto Paciente si se encuentra, o None si no existe.
         """
         for paciente in self._pacientes:
             if paciente.id_paciente == id_paciente:
@@ -60,15 +76,21 @@ class GestorPacientes:
         return None
 
     def listar_pacientes(self) -> list:
-        """Obtiene la lista completa de pacientes.
+        """
+        Retorna la lista completa de pacientes registrados.
 
-        Returns:
-            list: Lista de objetos Paciente.
+            Returns:
+                list: Lista de objetos Paciente.
         """
         return self._pacientes
 
     def cargar_datos(self):
-        """Carga los datos de pacientes desde un archivo JSON."""
+        """
+        Carga los datos de los pacientes desde un archivo JSON.
+
+        Intenta leer el archivo `pacientes.json` y construir objetos Paciente a partir de los datos almacenados.
+        En caso de error, imprime un mensaje.
+        """
         try:
             ruta = Path("datos") / "pacientes.json"
             if ruta.exists():
@@ -87,7 +109,12 @@ class GestorPacientes:
             print(f"Error al cargar pacientes: {e}")
 
     def guardar_datos(self):
-        """Guarda los datos de pacientes en un archivo JSON."""
+        """
+        Guarda los datos actuales de los pacientes en un archivo JSON.
+
+        Serializa los objetos Paciente en formato JSON y los guarda en `pacientes.json`.
+        En caso de error, imprime un mensaje.
+        """
         try:
             ruta = Path("datos") / "pacientes.json"
             datos = []

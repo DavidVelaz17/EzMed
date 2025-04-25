@@ -4,23 +4,34 @@ from pathlib import Path
 from utils.validaciones import validar_fecha_citas, generar_id, validar_hora
 
 class GestorCitas:
-    """Clase que gestiona las operaciones relacionadas con citas médicas.
+    """
+    Clase que gestiona las operaciones relacionadas con citas médicas.
 
-    Attributes:
-        citas (list): Lista de citas registradas en el sistema.
+        Attributes:
+            _citas (list): Lista de objetos Cita registrados.
+            file_path (Path): Ruta del archivo JSON donde se almacenan las citas.
     """
 
     def __init__(self):
-        """Inicializa el gestor de citas y carga datos desde archivo JSON."""
+        """
+        Inicializa una instancia de GestorCitas, cargando los datos desde el archivo JSON.
+        """
         self.file_path = Path("datos") / 'citas.json'
         self._citas = []
         self.cargar_datos()
 
     def agendar_cita(self, fecha: str, hora: str, paciente, medico) -> bool:
-        """Agrega una nueva cita al sistema.
+        """
+        Agrega una nueva cita al sistema si la fecha y hora son válidas.
 
-        Args:
-            cita: Objeto Cita a agregar.
+            Args:
+                fecha (str): Fecha de la cita en formato DD/MM/AAAA.
+                hora (str): Hora de la cita en formato HH:MM.
+                paciente (Paciente): Objeto Paciente.
+                medico (Medico): Objeto Medico.
+
+            Returns:
+                bool: True si la cita se agenda exitosamente, False si hay errores de validación.
         """
         # Validar formato y rango de la nueva fecha
         if not validar_fecha_citas(fecha):
@@ -42,11 +53,11 @@ class GestorCitas:
     def cancelar_cita(self, id_cita: str) -> bool:
         """Marca una cita como cancelada tanto en memoria como en el archivo JSON
 
-           Args:
-               id_cita: ID de la cita a cancelar.
+               Args:
+                   id_cita: ID de la cita a cancelar.
 
-           Returns:
-               bool: True si la cita fue encontrada y cancelada, False en caso contrario
+               Returns:
+                   bool: True si la cita fue encontrada y cancelada, False en caso contrario
            """
         cita_encontrada = False
 
@@ -72,12 +83,16 @@ class GestorCitas:
         return cita_encontrada
 
     def reagendar_cita(self, id_cita: str, nueva_fecha: str, nueva_hora: str):
-        """Reagenda una cita existente.
+        """
+        Modifica la fecha y hora de una cita existente si es válida y pendiente.
 
-        Args:
-            id_cita: ID de la cita a reagendar.
-            nueva_fecha: Nueva fecha para la cita.
-            nueva_hora: Nueva hora para la cita.
+            Args:
+                id_cita (str): ID de la cita a reagendar.
+                nueva_fecha (str): Nueva fecha en formato DD/MM/AAAA.
+                nueva_hora (str): Nueva hora en formato HH:MM.
+
+            Returns:
+                bool: True si la cita fue reagendada exitosamente, False si falla la validación.
         """
         cita = self.buscar_cita(id_cita)
 
@@ -100,35 +115,36 @@ class GestorCitas:
         return  False
 
     def citas_por_paciente(self, id_paciente: str) -> list:
-        """Obtiene las citas de un paciente específico.
+        """
+        Obtiene todas las citas asociadas a un paciente específico.
 
-        Args:
-            id_paciente: ID del paciente.
+            Args:
+                id_paciente (str): ID del paciente.
 
-        Returns:
-            list: Lista de citas del paciente.
+            Returns:
+                list: Lista de objetos Cita correspondientes al paciente.
         """
         return [cita for cita in self._citas if cita.paciente.id_paciente == id_paciente]
 
     def citas_por_medico(self, id_medico: str) -> list:
         """Obtiene las citas de un médico específico.
 
-        Args:
-            id_medico: ID del médico.
+            Args:
+                id_medico: ID del médico.
 
-        Returns:
-            list: Lista de citas del médico.
+            Returns:
+                list: Lista de citas del médico.
         """
         return [cita for cita in self._citas if cita.medico.id_medico == id_medico]
 
     def buscar_cita(self, id_cita: str):
         """Busca una cita por su ID.
 
-        Args:
-            id_cita: ID de la cita a buscar.
+            Args:
+                id_cita (str): ID de la cita a buscar.
 
-        Returns:
-            Cita: Objeto Cita si se encuentra, None en caso contrario.
+            Returns:
+                Cita | None: Objeto Cita si se encuentra, None en caso contrario.
         """
         for cita in self._citas:
             if cita.id_cita == id_cita:
@@ -136,7 +152,9 @@ class GestorCitas:
         return None
 
     def cargar_datos(self):
-        """Carga los datos de citas desde un archivo JSON."""
+        """
+        Carga las citas desde el archivo JSON, reconstruyendo los objetos Cita con sus respectivos pacientes y médicos.
+        """
         try:
             if self.file_path.exists():
                 with open(self.file_path, 'r', encoding='utf-8') as archivo:
@@ -166,7 +184,9 @@ class GestorCitas:
             print(f"Error al cargar citas: {e}")
 
     def guardar_datos(self):
-        """Guarda los datos de citas en un archivo JSON."""
+        """
+        Guarda la lista de citas en el archivo JSON de manera persistente.
+        """
         try:
             datos = []
             for cita in self._citas:
@@ -185,9 +205,10 @@ class GestorCitas:
             print(f"Error al guardar citas: {e}")
 
     def listar_citas(self) -> list:
-        """Devuelve la lista completa de citas.
+        """
+        Devuelve la lista completa de citas registradas.
 
-        Returns:
-            list: Lista de objetos Cita registrados en el sistema.
+            Returns:
+                list: Lista de objetos Cita registrados en el sistema.
         """
         return self._citas

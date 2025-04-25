@@ -6,22 +6,37 @@ from utils.validaciones import validar_telefono, validar_nombre, validar_fecha_m
 
 
 class GestorMedicos:
-    """Clase que gestiona las operaciones relacionadas con médicos.
+    """
+    Clase que gestiona las operaciones relacionadas con médicos.
 
-    Attributes:
-        medicos (list): Lista de médicos registrados en el sistema.
+    Esta clase permite agregar, buscar, listar y filtrar médicos, así como cargar y guardar datos desde/hacia archivos JSON.
+
+        Attributes:
+            _medicos (list): Lista de objetos Medico registrados.
     """
 
     def __init__(self):
-        """Inicializa el gestor de médicos y carga datos desde archivo JSON."""
+        """
+        Inicializa el gestor de médicos cargando datos desde un archivo JSON.
+
+        Crea una lista vacía de médicos y carga los datos existentes desde el archivo `medicos.json`.
+        """
         self._medicos = []
         self.cargar_datos()
 
     def agregar_medico(self, medico_data: dict) -> bool:
-        """Agrega un nuevo médico al sistema.
+        """
+        Agrega un nuevo médico al sistema después de validar sus datos.
 
-        Args:
-            medico: Objeto Medico a agregar.
+            Args:
+                medico_data (dict): Diccionario con los datos del médico, incluyendo nombre, apellido,
+                                    fecha de nacimiento, teléfono y especialidad.
+
+            Returns:
+                bool: True si se agregó correctamente, False si hubo errores de validación.
+
+            Raises:
+                ValueError: Si ya existe un médico con los mismos datos (nombre, apellido, fecha y teléfono).
         """
         # Validar formatos correctos
         if not all([
@@ -47,13 +62,14 @@ class GestorMedicos:
         return True
 
     def buscar_medico(self, id_medico: str) -> Medico:
-        """Busca un médico por su ID.
+        """
+        Busca un médico por su ID único.
 
-        Args:
-            id_medico: ID del médico a buscar.
+            Args:
+                id_medico (str): ID del médico a buscar.
 
-        Returns:
-            Medico: Objeto Medico si se encuentra, None en caso contrario.
+            Returns:
+                Medico: Objeto Medico si se encuentra, o None si no existe.
         """
         for medico in self._medicos:
             if medico.id_medico == id_medico:
@@ -61,26 +77,33 @@ class GestorMedicos:
         return None
 
     def listar_medicos(self) -> list:
-        """Obtiene la lista completa de médicos.
+        """
+        Retorna la lista completa de médicos registrados.
 
-        Returns:
-            list: Lista de objetos Medico.
+            Returns:
+                list: Lista de objetos Medico.
         """
         return self._medicos
 
     def medicos_por_especialidad(self, especialidad: str) -> list:
-        """Filtra médicos por especialidad.
+        """
+        Filtra los médicos que pertenecen a una especialidad específica.
 
-        Args:
-            especialidad: Nombre de la especialidad a filtrar.
+            Args:
+                especialidad (str): Nombre de la especialidad.
 
-        Returns:
-            list: Lista de médicos que tienen la especialidad especificada.
+            Returns:
+                list: Lista de médicos que tienen la especialidad especificada.
         """
         return [medico for medico in self._medicos if medico.especialidad.nombre == especialidad]
 
     def cargar_datos(self):
-        """Carga los datos de médicos desde un archivo JSON."""
+        """
+        Carga los datos de los médicos desde un archivo JSON.
+
+        Intenta leer el archivo `medicos.json` y construir objetos Medico a partir de los datos almacenados.
+        En caso de error, imprime un mensaje de error.
+        """
         try:
             ruta = Path("datos") / "medicos.json"
             if ruta.exists():
@@ -104,7 +127,12 @@ class GestorMedicos:
             print(f"Error al cargar médicos: {e}")
 
     def guardar_datos(self):
-        """Guarda los datos de médicos en un archivo JSON."""
+        """
+        Guarda los datos actuales de los médicos en un archivo JSON.
+
+        Serializa los objetos Medico en formato JSON y los guarda en `medicos.json`.
+        En caso de error, imprime un mensaje de error.
+        """
         try:
             ruta = Path("datos") / "medicos.json"
             datos = []
