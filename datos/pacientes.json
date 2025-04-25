@@ -1,114 +1,45 @@
 [
     {
         "nombre": "Ana",
-        "apellido": "Garc\u00eda",
+        "apellido": "García",
         "fecha_nacimiento": "15/03/1985",
         "telefono": "5512345678",
         "id_paciente": "PAC001"
     },
     {
-        "nombre": "Luis",
-        "apellido": "Mart\u00ednez",
-        "fecha_nacimiento": "22/07/1990",
+        "nombre": "Carlos",
+        "apellido": "Martínez",
+        "fecha_nacimiento": "02/08/1990",
         "telefono": "5523456789",
         "id_paciente": "PAC002"
     },
     {
-        "nombre": "Mar\u00eda",
-        "apellido": "Rodr\u00edguez",
-        "fecha_nacimiento": "10/11/1978",
+        "nombre": "Luisa",
+        "apellido": "Pérez",
+        "fecha_nacimiento": "20/11/1982",
         "telefono": "5534567890",
         "id_paciente": "PAC003"
     },
     {
-        "nombre": "Carlos",
-        "apellido": "L\u00f3pez",
-        "fecha_nacimiento": "05/05/1995",
+        "nombre": "Miguel",
+        "apellido": "López",
+        "fecha_nacimiento": "10/06/1978",
         "telefono": "5545678901",
         "id_paciente": "PAC004"
     },
     {
-        "nombre": "Sof\u00eda",
-        "apellido": "Hern\u00e1ndez",
-        "fecha_nacimiento": "30/09/1982",
+        "nombre": "María",
+        "apellido": "Sánchez",
+        "fecha_nacimiento": "30/12/1995",
         "telefono": "5556789012",
         "id_paciente": "PAC005"
     },
     {
-        "nombre": "Jorge",
-        "apellido": "P\u00e9rez",
-        "fecha_nacimiento": "18/12/1970",
+        "nombre": "José",
+        "apellido": "Rodríguez",
+        "fecha_nacimiento": "17/04/1988",
         "telefono": "5567890123",
         "id_paciente": "PAC006"
-    },
-    {
-        "nombre": "Karen",
-        "apellido": "Rodriguez",
-        "fecha_nacimiento": "12/04/2002",
-        "telefono": "23498848929",
-        "id_paciente": "PAC007"
-    },
-    {
-        "nombre": "asdfqwd",
-        "apellido": "sadfqwe",
-        "fecha_nacimiento": "17/10/2025",
-        "telefono": "4234234234",
-        "id_paciente": "PAC008"
-    },
-    {
-        "nombre": "David",
-        "apellido": "Lara",
-        "fecha_nacimiento": "08/08/2027",
-        "telefono": "1231231231",
-        "id_paciente": "PAC009"
-    },
-    {
-        "nombre": "David ",
-        "apellido": "Lara",
-        "fecha_nacimiento": "21/04/2025",
-        "telefono": "1231231231",
-        "id_paciente": "PAC010"
-    },
-    {
-        "nombre": "Ana",
-        "apellido": "Garcia",
-        "fecha_nacimiento": "15/03/1985",
-        "telefono": "5512345678",
-        "id_paciente": "PAC011"
-    },
-    {
-        "nombre": "Ana",
-        "apellido": "Garcia",
-        "fecha_nacimiento": "15/03/1985",
-        "telefono": "5512345678",
-        "id_paciente": "PAC012"
-    },
-    {
-        "nombre": "Ana",
-        "apellido": "Garcia",
-        "fecha_nacimiento": "15/03/1985",
-        "telefono": "5512345678",
-        "id_paciente": "PAC013"
-    },
-    {
-        "nombre": "Ana",
-        "apellido": "Garcia",
-        "fecha_nacimiento": "15/03/1985",
-        "telefono": "5512345678",
-        "id_paciente": "PAC014"
-    },
-    {
-        "nombre": "Ana",
-        "apellido": "Garcia",
-        "fecha_nacimiento": "15/03/1985",
-        "telefono": "5512345679",
-        "id_paciente": "PAC015"
-    },
-    {
-        "nombre": "Omar",
-        "apellido": "Zaragoza",
-        "fecha_nacimiento": "19/08/1980",
-        "telefono": "1231231233",
-        "id_paciente": "PAC016"
     }
+
 ]

@@ -9,10 +9,17 @@ from controlador.gestor_estadisticas import GestorEstadisticas
 from controlador.gestor_especialidades import GestorEspecialidades
 
 class GUI:
-    """Clase que representa la interfaz gráfica del sistema de gestión clínica."""
+    """
+    Interfaz gráfica para el sistema de gestión clínica.
 
+    Administra la visualización de los formularios y menús para gestionar pacientes, médicos, citas, diagnósticos y reportes.
+    """
     def __init__(self):
-        """Inicializa la interfaz gráfica y sus componentes."""
+        """
+        Inicializa la ventana principal y los gestores de datos.
+
+        Crea la ventana principal, establece el título y la geometría, y llama a la función para crear el menú principal.
+        """
         self.gestor_pacientes = GestorPacientes()
         self.gestor_medicos = GestorMedicos()
         self.gestor_citas = GestorCitas()
@@ -26,7 +33,11 @@ class GUI:
         self.crear_menu_principal()
 
     def crear_menu_principal(self):
-        """Crea el menú principal de la aplicación."""
+        """
+        Crea el menú principal con opciones para acceder a las diferentes funcionalidades del sistema.
+
+        Incluye botones para gestión de pacientes, médicos, citas, diagnósticos, reportes y más.
+        """
         self.limpiar_pantalla()
 
         lbl_titulo = tk.Label(self.root, text="Sistema de Gestión Clínica", font=("Arial", 16))
@@ -73,12 +84,19 @@ class GUI:
 
 
     def limpiar_pantalla(self):
-        """Limpia todos los widgets de la pantalla."""
+        """
+        Limpia la pantalla eliminando todos los widgets actualmente visibles.
+        """
         for widget in self.root.winfo_children():
             widget.destroy()
 
     def mostrar_formulario_paciente(self):
-        """Muestra el formulario para gestión de pacientes."""
+        """
+        Muestra el formulario para el registro de pacientes.
+
+        Permite ingresar datos como nombre, apellido, fecha de nacimiento y teléfono.
+        También muestra una lista de pacientes registrados.
+        """
         self.limpiar_pantalla()
 
         lbl_titulo = tk.Label(self.root, text="Registro de Pacientes", font=("Arial", 14))
@@ -109,7 +127,12 @@ class GUI:
         frame_botones.pack(pady=10)
 
         def guardar_paciente():
-            """Recolecta los datos del formulario y crea un nuevo paciente."""
+            """
+            Recolecta los datos del formulario y crea un nuevo paciente.
+
+            Excepciones:
+                Si ocurre un error durante el proceso de registro, se captura y muestra un mensaje de error con los detalles.
+            """
             try:
                 paciente = {
                     'nombre': entry_nombre.get(),
@@ -157,7 +180,12 @@ class GUI:
             ))
 
     def mostrar_formulario_medico(self):
-        """Muestra el formulario para gestión de médicos."""
+        """
+        Muestra el formulario para el registro de médicos.
+
+        Permite ingresar datos como nombre, apellido, fecha de nacimiento, teléfono y especialidad.
+        También muestra una lista de médicos registrados.
+        """
         self.limpiar_pantalla()
 
         lbl_titulo = tk.Label(self.root, text="Registro de Médicos", font=("Arial", 14))
@@ -193,7 +221,12 @@ class GUI:
         frame_botones.pack(pady=10)
 
         def guardar_medico():
-            """Recolecta los datos del formulario y crea un nuevo médico."""
+            """
+            Recolecta los datos del formulario y crea un nuevo médico.
+
+            Excepciones:
+                Si ocurre un error durante el proceso de registro, se captura y muestra un mensaje de error con los detalles.
+            """
             try:
                 nombre_esp = combo_especialidad.get()
                 if not nombre_esp:
@@ -260,7 +293,11 @@ class GUI:
             ))
 
     def mostrar_formulario_cita(self):
-        """Muestra el formulario para gestión de citas con opciones de crear, modificar y cancelar."""
+        """
+        Muestra el formulario para el registro de citas médicas.
+
+        Permite seleccionar paciente, médico, fecha y hora de la cita, y gestionar las citas registradas.
+        """
         self.limpiar_pantalla()
         self.cita_seleccionada = None
         self.filtro_paciente = None
@@ -374,7 +411,11 @@ class GUI:
         self.tree.bind("<<TreeviewSelect>>", self.on_cita_seleccionada)
 
     def mostrar_formulario_diagnostico(self):
-        """Muestra el formulario para gestionar diagnósticos médicos."""
+        """
+        Muestra el formulario para gestionar diagnósticos médicos.
+
+        Permite seleccionar un médico, ver citas pendientes y registrar diagnósticos, tratamiento y observaciones.
+        """
         self.limpiar_pantalla()
 
         lbl_titulo = tk.Label(self.root, text="Gestión de Diagnósticos", font=("Arial", 14))
@@ -458,7 +499,9 @@ class GUI:
             self.actualizar_citas_pendientes()
 
     def actualizar_citas_pendientes(self, event=None):
-        """Actualiza la tabla de citas pendientes según el médico seleccionado."""
+        """
+        Actualiza la lista de citas pendientes del médico seleccionado en la interfaz.
+        """
         # Limpiar tabla
         for item in self.tree_citas.get_children():
             self.tree_citas.delete(item)
@@ -484,7 +527,9 @@ class GUI:
             ))
 
     def guardar_diagnostico(self):
-        """Guarda un nuevo diagnóstico con los datos del formulario."""
+        """
+        Guarda el diagnóstico, tratamiento y observaciones de una cita médica seleccionada.
+        """
         try:
             # Validar selección de cita
             seleccion = self.tree_citas.selection()
@@ -525,7 +570,9 @@ class GUI:
             messagebox.showerror("Error", f"Ocurrió un error al guardar: {str(e)}")
 
     def actualizar_lista_citas(self):
-        """Actualiza la tabla aplicando los filtros actuales."""
+        """
+        Actualiza la lista de citas según los filtros aplicados (paciente y/o médico).
+        """
         # Limpiar tabla
         for item in self.tree.get_children():
             self.tree.delete(item)
@@ -557,7 +604,9 @@ class GUI:
             ))
 
     def on_cita_seleccionada(self, event):
-        """Maneja la selección de una cita en el Treeview."""
+        """
+        Maneja la selección de una cita y carga los datos en el formulario de modificación.
+        """
         seleccion = self.tree.selection()
         if seleccion:
             item = self.tree.item(seleccion[0])
@@ -586,7 +635,9 @@ class GUI:
 
 
     def guardar_cita(self):
-        """Crea una nueva cita con los datos del formulario."""
+        """
+        Guarda una nueva cita médica con los datos proporcionados.
+        """
         try:
             id_paciente = self.combo_paciente.get().split(" - ")[0]
             id_medico = self.combo_medico.get().split(" - ")[0]
@@ -611,7 +662,9 @@ class GUI:
             messagebox.showerror("Error", f"No se pudo agendar la cita: {e}")
 
     def cancelar_cita(self):
-        """Cancela la cita seleccionada."""
+        """
+        Cancela una cita médica seleccionada.
+        """
         if not self.cita_seleccionada:
             return
 
@@ -631,7 +684,9 @@ class GUI:
             messagebox.showerror("Error", "La cita no pudo ser cancelada")
 
     def modificar_cita(self):
-        """Modifica la cita seleccionada con los nuevos datos del formulario."""
+        """
+        Modifica la fecha y hora de una cita médica seleccionada.
+        """
         if self.cita_seleccionada:
             try:
                 nueva_fecha = self.entry_fecha.get()
@@ -653,7 +708,9 @@ class GUI:
                 messagebox.showerror("Error", f"Error al modificar: {str(e)}")
 
     def limpiar_formulario(self):
-        """Limpia todos los campos del formulario."""
+        """
+        Limpia los campos del formulario de cita.
+        """
         self.entry_fecha.delete(0, tk.END)
         self.entry_hora.delete(0, tk.END)
         self.combo_paciente.set('')
@@ -663,7 +720,9 @@ class GUI:
         self.btn_modificar.config(state=tk.DISABLED)
 
     def mostrar_reportes(self):
-        """Muestra los reportes y estadísticas del sistema."""
+        """
+        Muestra los reportes y estadísticas del sistema (consultas por especialidad, médico más solicitado, etc.).
+        """
         self.limpiar_pantalla()
 
         lbl_titulo = tk.Label(self.root, text="Reportes y Estadísticas", font=("Arial", 14))
@@ -730,7 +789,9 @@ class GUI:
         btn_regresar.pack(pady=10)
 
     def aplicar_filtros(self, event=None):
-        """Aplica los filtros seleccionados a la lista de citas."""
+        """
+        Aplica los filtros de paciente y médico a la lista de citas.
+        """
         # Determinar qué combobox disparó el evento
         widget_disparador = event.widget if event else None
 
@@ -756,7 +817,9 @@ class GUI:
         self.actualizar_lista_citas()
 
     def limpiar_filtros(self):
-        """Restablece todos los filtros a sus valores por defecto y habilita los combobox."""
+        """
+        Limpia los filtros aplicados y muestra todas las citas.
+        """
         self.combo_filtro_paciente.set("Todos")
         self.combo_filtro_medico.set("Todos")
         # Habilitar ambos combobox
@@ -765,7 +828,9 @@ class GUI:
         self.actualizar_lista_citas()
 
     def mostrar_formulario_especialidades(self):
-        """Muestra el formulario para gestión de especialidades."""
+        """
+        Muestra el formulario de gestión de especialidades (agregar, eliminar, listar).
+        """
         self.limpiar_pantalla()
 
         lbl_titulo = tk.Label(self.root, text="Gestión de Especialidades", font=("Arial", 14))
@@ -843,7 +908,9 @@ class GUI:
         actualizar_lista()
 
     def mostrar_lista_diagnosticos(self):
-        """Muestra una tabla con todos los diagnósticos registrados."""
+        """
+        Muestra un listado de todos los diagnósticos registrados.
+        """
         self.limpiar_pantalla()
 
         lbl_titulo = tk.Label(self.root, text="Listado de Diagnósticos", font=("Arial", 14))
@@ -930,5 +997,7 @@ class GUI:
         btn_regresar.pack()
 
     def ejecutar(self):
-        """Inicia la aplicación."""
+        """
+        Inicia la aplicación y muestra la ventana principal.
+        """
         self.root.mainloop()

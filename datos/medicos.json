@@ -1,79 +1,101 @@
 [
     {
         "nombre": "Roberto",
-        "apellido": "S\u00e1nchez",
+        "apellido": "Sánchez",
         "fecha_nacimiento": "20/04/1975",
         "telefono": "5578901234",
         "id_medico": "MED001",
         "especialidad": {
-            "nombre": "Cardiolog\u00eda",
-            "descripcion": "Especialidad m\u00e9dica que se encarga del estudio y tratamiento de las enfermedades del coraz\u00f3n"
+            "nombre": "Cardiología",
+            "descripcion": "Especialidad médica que se encarga del estudio y tratamiento de las enfermedades del corazón"
         }
     },
     {
-        "nombre": "Laura",
-        "apellido": "Ram\u00edrez",
-        "fecha_nacimiento": "12/08/1980",
-        "telefono": "5589012345",
+        "nombre": "Juan",
+        "apellido": "Gómez",
+        "fecha_nacimiento": "14/09/1980",
+        "telefono": "5578912345",
         "id_medico": "MED002",
         "especialidad": {
-            "nombre": "Pediatr\u00eda",
-            "descripcion": "Especialidad m\u00e9dica que estudia al ni\u00f1o y sus enfermedades"
+            "nombre": "Neurología",
+            "descripcion": "Especialidad médica que se enfoca en el diagnóstico y tratamiento de enfermedades del sistema nervioso"
         }
     },
     {
-        "nombre": "Fernando",
-        "apellido": "G\u00f3mez",
-        "fecha_nacimiento": "03/01/1968",
-        "telefono": "5590123456",
+        "nombre": "Ana",
+        "apellido": "Morales",
+        "fecha_nacimiento": "22/01/1985",
+        "telefono": "5580123456",
         "id_medico": "MED003",
         "especialidad": {
-            "nombre": "Dermatolog\u00eda",
-            "descripcion": "Especialidad m\u00e9dica que se ocupa del estudio de la piel y sus enfermedades"
+            "nombre": "Pediatría",
+            "descripcion": "Especialidad médica dedicada a la atención y cuidado de la salud de los niños"
         }
     },
     {
-        "nombre": "Patricia",
-        "apellido": "D\u00edaz",
-        "fecha_nacimiento": "25/06/1972",
-        "telefono": "5501234567",
+        "nombre": "Carlos",
+        "apellido": "Martínez",
+        "fecha_nacimiento": "05/05/1973",
+        "telefono": "5581234567",
         "id_medico": "MED004",
         "especialidad": {
-            "nombre": "Ginecolog\u00eda",
-            "descripcion": "Especialidad m\u00e9dica que trata las enfermedades del sistema reproductor femenino"
+            "nombre": "Ginecología",
+            "descripcion": "Especialidad médica que se ocupa del aparato reproductor femenino"
         }
     },
     {
-        "nombre": "Ricardo",
-        "apellido": "V\u00e1zquez",
-        "fecha_nacimiento": "14/10/1983",
-        "telefono": "5512345670",
+        "nombre": "Lucía",
+        "apellido": "Fernández",
+        "fecha_nacimiento": "28/02/1990",
+        "telefono": "5592345678",
         "id_medico": "MED005",
         "especialidad": {
-            "nombre": "Ortopedia",
-            "descripcion": "Especialidad m\u00e9dica que corrige o previene las deformidades del sistema musculoesquel\u00e9tico"
+            "nombre": "Dermatología",
+            "descripcion": "Especialidad médica que se ocupa del diagnóstico y tratamiento de las enfermedades de la piel"
         }
     },
     {
-        "nombre": "Gabriela",
-        "apellido": "Castillo",
-        "fecha_nacimiento": "07/02/1979",
-        "telefono": "5523456701",
+        "nombre": "Pedro",
+        "apellido": "García",
+        "fecha_nacimiento": "11/11/1972",
+        "telefono": "5593456789",
         "id_medico": "MED006",
         "especialidad": {
-            "nombre": "Neurolog\u00eda",
-            "descripcion": "Especialidad m\u00e9dica que trata los trastornos del sistema nervioso"
+            "nombre": "Oftalmología",
+            "descripcion": "Especialidad médica que se dedica al estudio y tratamiento de las enfermedades oculares"
         }
     },
     {
-        "nombre": "Kenia",
-        "apellido": "Kalihua",
-        "fecha_nacimiento": "19/11/1999",
-        "telefono": "1231231233",
+        "nombre": "María",
+        "apellido": "Rodríguez",
+        "fecha_nacimiento": "30/07/1987",
+        "telefono": "5604567890",
         "id_medico": "MED007",
         "especialidad": {
-            "nombre": "Pediatr\u00eda",
-            "descripcion": "Especialidad m\u00e9dica para ni\u00f1os"
+            "nombre": "Traumatología",
+            "descripcion": "Especialidad médica que se enfoca en el diagnóstico y tratamiento de las lesiones del sistema musculoesquelético"
+        }
+    },
+    {
+        "nombre": "José",
+        "apellido": "Álvarez",
+        "fecha_nacimiento": "03/12/1975",
+        "telefono": "5615678901",
+        "id_medico": "MED008",
+        "especialidad": {
+            "nombre": "Psiquiatría",
+            "descripcion": "Especialidad médica dedicada al diagnóstico, tratamiento y prevención de trastornos mentales"
+        }
+    },
+    {
+        "nombre": "Isabel",
+        "apellido": "Pérez",
+        "fecha_nacimiento": "16/03/1983",
+        "telefono": "5616789012",
+        "id_medico": "MED009",
+        "especialidad": {
+            "nombre": "Endocrinología",
+            "descripcion": "Especialidad médica que trata los trastornos hormonales y las glándulas endocrinas"
         }
     }
 ]

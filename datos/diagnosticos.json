@@ -1,9 +1,9 @@
 [
     {
         "id_diagnostico": "DIA001",
-        "descripcion": "qwefqwef",
-        "tratamiento": "qwefwqef",
-        "observaciones": "qwefqwef",
-        "id_cita": "CIT005"
+        "descripcion": "Dolor intenso en la cabeza, posible migra\u00f1a",
+        "tratamiento": "Analgesicos, descanso",
+        "observaciones": "El paciente tiene antecedentes familiares de migra\u00f1a",
+        "id_cita": "CIT003"
     }
 ]
