@@ -56,7 +56,7 @@ class GestorPacientes:
         ultimo_id = max([p.id_paciente for p in self._pacientes], default=None)
         paciente_data['id_paciente'] = generar_id("PAC", ultimo_id)
 
-        paciente = Paciente.desde_json(paciente_data)
+        paciente = Paciente(**paciente_data)
         self._pacientes.append(paciente)
         self.guardar_datos()
         return True
@@ -97,7 +97,15 @@ class GestorPacientes:
             if self.file_path.exists():
                 with open(self.file_path, 'r', encoding='utf-8') as archivo:
                     datos = json.load(archivo)
-                    self._pacientes = [Paciente.desde_json(p) for p in datos]
+                    for paciente_data in datos:
+                        paciente = Paciente(
+                            paciente_data['nombre'],
+                            paciente_data['apellido'],
+                            paciente_data['fecha_nacimiento'],
+                            paciente_data['telefono'],
+                            paciente_data['id_paciente']
+                        )
+                        self._pacientes.append(paciente)
         except Exception as e:
             print(f"Error al cargar pacientes: {e}")
 
@@ -109,11 +117,23 @@ class GestorPacientes:
         En caso de error, imprime un mensaje.
         """
         try:
+            datos = []
+            for paciente in self._pacientes:
+                datos.append({
+                    'nombre': paciente.nombre,
+                    'apellido': paciente.apellido,
+                    'fecha_nacimiento': paciente.fecha_nacimiento,
+                    'telefono': paciente.telefono,
+                    'id_paciente': paciente.id_paciente
+                })
+
+            # Crear respaldo antes de sobrescribir el archivo
             if self.file_path.exists():
                 copia = self.file_path.with_suffix('.json.bak')
                 copyfile(self.file_path, copia)
 
+            # Guardar en el archivo original
             with open(self.file_path, 'w', encoding='utf-8') as archivo:
-                json.dump([p.a_json() for p in self._pacientes], archivo, indent=4)
+                json.dump(datos, archivo, indent=4)
         except Exception as e:
             print(f"Error al guardar pacientes: {e}")
