@@ -3,7 +3,7 @@ from pathlib import Path
 from modelo.diagnostico import Diagnostico
 from modelo.cita import Cita
 from utils.validaciones import generar_id
-
+from shutil import copyfile
 
 class GestorDiagnosticos:
     """
@@ -117,6 +117,7 @@ class GestorDiagnosticos:
         Carga los datos de diagnósticos desde un archivo JSON,
         reconstruyendo las relaciones con las citas asociadas.
         """
+        self._diagnosticos.clear()
         try:
             if self.file_path.exists():
                 with open(self.file_path, 'r', encoding='utf-8') as archivo:
@@ -152,7 +153,12 @@ class GestorDiagnosticos:
                     'observaciones': diagnostico.observaciones,
                     'id_cita': diagnostico.cita.id_cita
                 })
+            # Crear respaldo antes de sobrescribir el archivo
+            if self.file_path.exists():
+                copia = self.file_path.with_suffix('.json.bak')
+                copyfile(self.file_path, copia)
 
+            # Guardar en el archivo original
             with open(self.file_path, 'w', encoding='utf-8') as archivo:
                 json.dump(datos, archivo, indent=4)
         except Exception as e:

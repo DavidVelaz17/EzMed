@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 from modelo.especialidad import Especialidad
-
+from shutil import copyfile
 
 class GestorEspecialidades:
     """
@@ -25,6 +25,7 @@ class GestorEspecialidades:
         Carga las especialidades desde el archivo JSON, si existe.
         Si el archivo no existe o contiene errores, imprime un mensaje de error.
         """
+        self._especialidades.clear()
         try:
             if self.file_path.exists():
                 with open(self.file_path, 'r', encoding='utf-8') as f:
@@ -43,6 +44,12 @@ class GestorEspecialidades:
         """
         try:
             Path("datos").mkdir(exist_ok=True)
+            # Crear respaldo antes de sobrescribir el archivo
+            if self.file_path.exists():
+                copia = self.file_path.with_suffix('.json.bak')
+                copyfile(self.file_path, copia)
+
+            # Guardar en el archivo original
             with open(self.file_path, 'w', encoding='utf-8') as f:
                 json.dump(
                     [{"nombre": e.nombre, "descripcion": e.descripcion}

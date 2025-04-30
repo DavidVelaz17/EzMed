@@ -3,7 +3,7 @@ from modelo.medico import Medico
 from modelo.especialidad import Especialidad
 from pathlib import Path
 from utils.validaciones import validar_telefono, validar_nombre, validar_fecha_medico, generar_id, validar_persona_duplicado
-
+from shutil import copyfile
 
 class GestorMedicos:
     """
@@ -21,6 +21,7 @@ class GestorMedicos:
 
         Crea una lista vacía de médicos y carga los datos existentes desde el archivo `medicos.json`.
         """
+        self.file_path = Path('datos') / 'medicos.json'
         self._medicos = []
         self.cargar_datos()
 
@@ -104,10 +105,10 @@ class GestorMedicos:
         Intenta leer el archivo `medicos.json` y construir objetos Medico a partir de los datos almacenados.
         En caso de error, imprime un mensaje de error.
         """
+        self._medicos.clear()
         try:
-            ruta = Path("datos") / "medicos.json"
-            if ruta.exists():
-                with open(ruta, 'r', encoding='utf-8') as archivo:
+            if self.file_path.exists():
+                with open(self.file_path, 'r', encoding='utf-8') as archivo:
                     datos = json.load(archivo)
                     for medico_data in datos:
                         especialidad = Especialidad(
@@ -134,7 +135,6 @@ class GestorMedicos:
         En caso de error, imprime un mensaje de error.
         """
         try:
-            ruta = Path("datos") / "medicos.json"
             datos = []
             for medico in self._medicos:
                 datos.append({
@@ -148,8 +148,13 @@ class GestorMedicos:
                         'descripcion': medico.especialidad.descripcion
                     }
                 })
+            # Crear respaldo antes de sobrescribir el archivo
+            if self.file_path.exists():
+                copia = self.file_path.with_suffix('.json.bak')
+                copyfile(self.file_path, copia)
 
-            with open(ruta, 'w', encoding='utf-8') as archivo:
+            # Guardar en el archivo original
+            with open(self.file_path, 'w', encoding='utf-8') as archivo:
                 json.dump(datos, archivo, indent=4)
         except Exception as e:
             print(f"Error al guardar médicos: {e}")

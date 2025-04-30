@@ -2,6 +2,7 @@ import json
 from modelo.cita import Cita
 from pathlib import Path
 from utils.validaciones import validar_fecha_citas, generar_id, validar_hora
+from shutil import copyfile
 
 class GestorCitas:
     """
@@ -198,7 +199,12 @@ class GestorCitas:
                     'id_paciente': cita.paciente.id_paciente,
                     'id_medico': cita.medico.id_medico
                 })
+            # Crear respaldo antes de sobrescribir el archivo
+            if self.file_path.exists():
+                copia = self.file_path.with_suffix('.json.bak')
+                copyfile(self.file_path, copia)
 
+            # Guardar en el archivo original
             with open(self.file_path, 'w', encoding='utf-8') as archivo:
                 json.dump(datos, archivo, indent=4)
         except Exception as e:

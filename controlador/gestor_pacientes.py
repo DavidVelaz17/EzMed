@@ -2,7 +2,7 @@ import json
 from modelo.paciente import Paciente
 from pathlib import Path
 from utils.validaciones import validar_nombre,validar_telefono,validar_fecha_paciente, generar_id, validar_persona_duplicado
-
+from shutil import copyfile
 
 class GestorPacientes:
     """
@@ -20,6 +20,7 @@ class GestorPacientes:
 
         Crea una lista vacía y la rellena con pacientes cargados desde el archivo `pacientes.json` si existe.
         """
+        self.file_path = Path('datos') / 'pacientes.json'
         self._pacientes = []
         self.cargar_datos()
 
@@ -55,7 +56,7 @@ class GestorPacientes:
         ultimo_id = max([p.id_paciente for p in self._pacientes], default=None)
         paciente_data['id_paciente'] = generar_id("PAC", ultimo_id)
 
-        paciente = Paciente(**paciente_data)
+        paciente = Paciente.desde_json(paciente_data)
         self._pacientes.append(paciente)
         self.guardar_datos()
         return True
@@ -91,20 +92,12 @@ class GestorPacientes:
         Intenta leer el archivo `pacientes.json` y construir objetos Paciente a partir de los datos almacenados.
         En caso de error, imprime un mensaje.
         """
+        self._pacientes.clear()
         try:
-            ruta = Path("datos") / "pacientes.json"
-            if ruta.exists():
-                with open(ruta, 'r', encoding='utf-8') as archivo:
+            if self.file_path.exists():
+                with open(self.file_path, 'r', encoding='utf-8') as archivo:
                     datos = json.load(archivo)
-                    for paciente_data in datos:
-                        paciente = Paciente(
-                            paciente_data['nombre'],
-                            paciente_data['apellido'],
-                            paciente_data['fecha_nacimiento'],
-                            paciente_data['telefono'],
-                            paciente_data['id_paciente']
-                        )
-                        self._pacientes.append(paciente)
+                    self._pacientes = [Paciente.desde_json(p) for p in datos]
         except Exception as e:
             print(f"Error al cargar pacientes: {e}")
 
@@ -116,18 +109,11 @@ class GestorPacientes:
         En caso de error, imprime un mensaje.
         """
         try:
-            ruta = Path("datos") / "pacientes.json"
-            datos = []
-            for paciente in self._pacientes:
-                datos.append({
-                    'nombre': paciente.nombre,
-                    'apellido': paciente.apellido,
-                    'fecha_nacimiento': paciente.fecha_nacimiento,
-                    'telefono': paciente.telefono,
-                    'id_paciente': paciente.id_paciente
-                })
+            if self.file_path.exists():
+                copia = self.file_path.with_suffix('.json.bak')
+                copyfile(self.file_path, copia)
 
-            with open(ruta, 'w', encoding='utf-8') as archivo:
-                json.dump(datos, archivo, indent=4)
+            with open(self.file_path, 'w', encoding='utf-8') as archivo:
+                json.dump([p.a_json() for p in self._pacientes], archivo, indent=4)
         except Exception as e:
             print(f"Error al guardar pacientes: {e}")

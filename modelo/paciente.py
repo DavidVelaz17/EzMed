@@ -52,3 +52,34 @@ class Paciente(Persona):
         str: Devuelve el identificador único del paciente.
         """
         return self._id_paciente
+
+    def a_json(self) -> dict:
+        """
+        Serializa el paciente a un diccionario JSON.
+        """
+        return {
+            'nombre': self.nombre,
+            'apellido': self.apellido,
+            'fecha_nacimiento': self.fecha_nacimiento,
+            'telefono': self.telefono,
+            'id_paciente': self.id_paciente
+        }
+
+    @classmethod
+    def desde_json(cls, data: dict):
+        """
+        Crea una instancia de Paciente a partir de un diccionario.
+
+        Args:
+            data (dict): Diccionario con los datos del paciente.
+
+        Returns:
+            Paciente: Instancia del paciente reconstruida.
+        """
+        return cls(
+            data['nombre'],
+            data['apellido'],
+            data['fecha_nacimiento'],
+            data['telefono'],
+            data['id_paciente']
+        )
