@@ -55,14 +55,14 @@ EzMed/
 
 ## Instalación
 
-1. Clona el repositorio:
+### 1. Clona el repositorio:
 
 ```bash
     git clone https://github.com/DavidVelaz17/EzMed.git
     cd EzMed
 ```
 
-2. Ejecuta la aplicación:
+### 2. Ejecuta la aplicación:
 
 ```bash
     python main.py
