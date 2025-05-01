@@ -59,42 +59,36 @@ class Cita:
         self._fecha = nueva_fecha
         self._hora = nueva_hora
 
-    @property
     def id_cita(self) -> str:
         """
         str: Devuelve el identificador único de la cita.
         """
         return self._id_cita
 
-    @property
     def fecha(self) -> str:
         """
         str: Devuelve la fecha de la cita.
         """
         return self._fecha
 
-    @property
     def hora(self) -> str:
         """
         str: Devuelve la hora de la cita.
         """
         return self._hora
 
-    @property
     def estado(self) -> str:
         """
         str: Devuelve el estado actual de la cita.
         """
         return self._estado
 
-    @property
     def paciente(self) -> Paciente:
         """
         Paciente: Devuelve el objeto Paciente asociado a la cita.
         """
         return self._paciente
 
-    @property
     def medico(self) -> Medico:
         """
         Médico: Devuelve el objeto Médico asignado a la cita.
