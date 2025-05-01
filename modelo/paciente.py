@@ -46,6 +46,7 @@ class Paciente(Persona):
         """
         return self._historial_medico
 
+    @property
     def id_paciente(self) -> str:
         """
         str: Devuelve el identificador único del paciente.

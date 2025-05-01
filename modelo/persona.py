@@ -33,24 +33,28 @@ class Persona:
         """
         return f"{self._apellido}, {self._nombre}"
 
+    @property
     def nombre(self) -> str:
         """
         str: Devuelve el nombre de la persona.
         """
         return self._nombre
 
+    @property
     def apellido(self) -> str:
         """
         str: Devuelve el apellido de la persona.
         """
         return self._apellido
 
+    @property
     def fecha_nacimiento(self) -> str:
         """
         str: Devuelve la fecha de nacimiento de la persona.
         """
         return self._fecha_nacimiento
 
+    @property
     def telefono(self) -> str:
         """
         str: Devuelve el número de teléfono de la persona.

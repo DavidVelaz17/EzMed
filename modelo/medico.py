@@ -50,12 +50,14 @@ class Medico(Persona):
         """
         return self._citas
 
+    @property
     def id_medico(self) -> str:
         """
         str: Devuelve el identificador único del médico.
         """
         return self._id_medico
 
+    @property
     def especialidad(self) -> Especialidad:
         """
         Especialidad: Devuelve la especialidad médica del médico.

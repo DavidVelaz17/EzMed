@@ -33,30 +33,35 @@ class Diagnostico:
         self._observaciones = observaciones
         self._cita = cita
 
+    @property
     def id_diagnostico(self) -> str:
         """
         str: Devuelve el identificador único del diagnóstico.
         """
         return self._id_diagnostico
 
+    @property
     def descripcion(self) -> str:
         """
         str: Devuelve la descripción del diagnóstico.
         """
         return self._descripcion
 
+    @property
     def tratamiento(self) -> str:
         """
         str: Devuelve el tratamiento recomendado.
         """
         return self._tratamiento
 
+    @property
     def observaciones(self) -> str:
         """
         str: Devuelve las observaciones adicionales del médico.
         """
         return self._observaciones
 
+    @property
     def cita(self) -> Cita:
         """
         Cita: Devuelve la cita médica asociada a este diagnóstico.

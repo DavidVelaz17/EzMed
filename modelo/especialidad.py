@@ -21,12 +21,14 @@ class Especialidad:
         self._nombre = nombre
         self._descripcion = descripcion
 
+    @property
     def nombre(self) -> str:
         """
         str: Devuelve el nombre de la especialidad médica.
         """
         return self._nombre
 
+    @property
     def descripcion(self) -> str:
         """
         str: Devuelve la descripción de la especialidad médica.
